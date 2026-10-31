@@ -1,4 +1,4 @@
-# Requirements: Foundation (walking skeleton)
+# Requirements Document
 
 Lives across `/web-kit` and `/apps/recipe-box` (or a shared app shell). This is the first spec to implement — everything else builds on top of it.
 

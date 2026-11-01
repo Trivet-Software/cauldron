@@ -11,7 +11,7 @@ The foundation spec delivers the smallest deployable app that proves the tech st
 ### Requirement 1: Monorepo structure
 **User Story:** As a developer, I want a clean repo layout from the start, so that each spec area has a home and the build doesn't need restructuring later.
 #### Acceptance Criteria
-1. WHEN the repo is scaffolded, THE SYSTEM SHALL contain `/core`, `/web-kit`, `/apps/recipe-box`, `/apps/research-library` directories.
+1. WHEN the repo is scaffolded, THE SYSTEM SHALL contain `/core`, `/web-kit`, `/apps/recipe-box`, `/apps/research-library` directories. Backend service folders (`/services/*`) are added by the public-api-sdk and mcp-server specs.
 2. WHEN the web app is built, THE SYSTEM SHALL share `/web-kit` as a package or module that both apps import.
 3. WHEN dependencies are installed, THE SYSTEM SHALL use a single workspace lockfile (pnpm, npm workspaces, or equivalent).
 4. WHEN the repo is cloned, THE SYSTEM SHALL include a root `package.json` with workspace configuration and a `.gitignore` already present.
@@ -28,9 +28,9 @@ The foundation spec delivers the smallest deployable app that proves the tech st
 ### Requirement 3: Clerk authentication
 **User Story:** As a user, I want to sign in and sign out, so that my data is protected and the app knows who I am.
 #### Acceptance Criteria
-1. WHEN the app initializes, THE SYSTEM SHALL configure `@clerk/clerk-react` with publishable and secret keys from environment variables.
+1. WHEN the app initializes, THE SYSTEM SHALL configure `@clerk/react` (v6) with the Clerk publishable key from environment variables. The Clerk secret key SHALL NOT be read or bundled by the web app; it belongs to backend services only.
 2. WHEN an unauthenticated user visits a protected route, THE SYSTEM SHALL redirect them to a sign-in page using TanStack Router `beforeLoad` guards.
-3. WHEN a user signs in, THE SYSTEM SHALL offer Clerk's hosted sign-in component (email, OAuth, or whichever providers are configured in the Clerk dashboard).
+3. WHEN a user signs in, THE SYSTEM SHALL offer Clerk's hosted sign-in component (email, OAuth, or whichever providers are configured in the Clerk dashboard). The Clerk instance SHALL have the username + password strategy enabled so the judge account login works (auth-abuse Requirement 9).
 4. WHEN a user is signed in, THE SYSTEM SHALL display their identity (name or email) and a sign-out action in the header.
 5. WHEN a user signs out, THE SYSTEM SHALL redirect them to the home page.
 6. WHEN the app makes API calls, THE SYSTEM SHALL include the Clerk session token in the Authorization header.
@@ -47,7 +47,7 @@ The foundation spec delivers the smallest deployable app that proves the tech st
 #### Acceptance Criteria
 1. WHEN the app runs locally, THE SYSTEM SHALL load environment variables from a `.env.local` file (gitignored).
 2. WHEN the app runs in production, THE SYSTEM SHALL read environment variables from Railway's variable configuration.
-3. WHEN a new developer sets up the project, THE SYSTEM SHALL provide a `.env.example` file documenting required variables (Clerk publishable key, Clerk secret key, API base URL).
+3. WHEN a new developer sets up the project, THE SYSTEM SHALL provide a `.env.example` file documenting required variables (Clerk publishable key, API base URL) and the server-only Clerk secret key, marked as never `VITE_`-prefixed.
 4. WHEN the app starts, THE SYSTEM SHALL validate that required environment variables are present and fail fast with a clear message if any are missing.
 5. WHEN the project is deployed to Railway, THE SYSTEM SHALL include a `railway.json` or `nixpacks.toml` config that specifies the build command (`vite build`) and the static output directory (`dist/`).
 6. WHEN Railway builds the app, THE SYSTEM SHALL pass environment variables through Vite's `define` or `import.meta.env` so the Clerk publishable key is available client-side.

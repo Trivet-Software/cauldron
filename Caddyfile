@@ -1,0 +1,26 @@
+# Caddyfile for serving the Cauldron Recipe Box SPA on Railway
+#
+# Railway injects its PORT env var; we fall back to 8080 for local runs.
+
+:{$PORT:8080} {
+	root * ./apps/recipe-box/dist
+
+	# Health check endpoint — answer 200 here so Railway's probe gets a real
+	# response instead of the SPA shell. This must be a `handle` block (not a
+	# bare directive) so it is mutually exclusive with the SPA fallback below:
+	# Caddy sorts `try_files` before `handle` by default, so a sibling bare
+	# `try_files` would rewrite /health to /index.html before this matcher ran.
+	handle /health {
+		respond "ok" 200
+	}
+
+	# SPA fallback — catch-all for everything that isn't /health. Serve static
+	# assets when they exist (try_files keeps the path), otherwise rewrite to
+	# /index.html so deep links and refreshes on client-side routes are handled
+	# by TanStack Router instead of 404'ing. A bare `handle` (no matcher) always
+	# sorts last, so /health above is matched first.
+	handle {
+		try_files {path} /index.html
+		file_server
+	}
+}

@@ -1,0 +1,37 @@
+# Nixpacks config for Railway deployment
+# Builds the Recipe Box Vite SPA from the pnpm monorepo and serves the static
+# output directory (see the Caddyfile created in task 8.3 for static serving
+# with SPA fallback).
+#
+# Requirements: 5.5, 5.6, 6.1, 6.3
+
+[phases.setup]
+# Node 20 LTS + pnpm for the pnpm workspace monorepo.
+nixPkgs = ["nodejs_20", "pnpm"]
+
+[phases.install]
+# Install all workspace dependencies from the single lockfile.
+cmds = ["pnpm install --frozen-lockfile"]
+
+[phases.build]
+# Build only the recipe-box workspace, which runs `vite build` via its package
+# script and emits the static SPA bundle to apps/recipe-box/dist/.
+cmds = ["pnpm --filter recipe-box build"]
+
+[deploy]
+# Static output directory served by Caddy (configured in the Caddyfile).
+# Railway serves the contents of this directory after the build phase.
+outputDir = "apps/recipe-box/dist"
+
+# --- Client-side environment variables (Requirement 5.6, 6.3) -------------
+# Railway injects environment variables into the build environment
+# automatically. Variables prefixed with `VITE_` are read by Vite during
+# `vite build` and inlined into the client bundle via `import.meta.env`, so
+# the Clerk publishable key is available client-side with no extra config.
+#
+# Set these in Railway's service > Variables:
+#   VITE_CLERK_PUBLISHABLE_KEY   (required — Clerk frontend key)
+#   VITE_API_BASE_URL             (optional — future backend base URL)
+#
+# Note: CLERK_SECRET_KEY (no VITE_ prefix) should NOT be set on this static
+# service — it is server-only and unused in this skeleton.

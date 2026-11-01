@@ -1,0 +1,14 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`home route snapshot > matches the rendered home page 1`] = `
+<div>
+  <main>
+    <h1>
+      Welcome to Recipe Box
+    </h1>
+    <p>
+      Your goal-driven capture and compile engine.
+    </p>
+  </main>
+</div>
+`;

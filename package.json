@@ -1,0 +1,20 @@
+{
+  "name": "cauldron",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter recipe-box dev",
+    "build": "pnpm -r --filter=recipe-box build",
+    "lint": "eslint .",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "typescript": "^5.6.0",
+    "typescript-eslint": "^8.0.0"
+  }
+}

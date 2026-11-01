@@ -29,3 +29,7 @@ npm-debug.log*
 coverage/
 
 # Kiro specs are committed — don't ignore .kiro/
+
+# Generated files (managed by @tanstack/router-plugin)
+**/routeTree.gen.ts
+**/.tanstack/

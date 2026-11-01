@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "lint-on-save",
+      "trigger": "PostFileSave",
+      "description": "Runs ESLint --fix on the saved file. Uses the project-local binary for speed (no npx overhead); inert-by-design — does nothing if ESLint is not installed, and never blocks the save (always exits 0).",
+      "matcher": "\\.(ts|tsx|js|jsx)$",
+      "action": {
+        "type": "command",
+        "command": "[ -x node_modules/.bin/eslint ] && node_modules/.bin/eslint --fix \"{{filePath}}\" 2>/dev/null; exit 0",
+        "timeout": 30
+      }
+    }
+  ]
+}

@@ -30,5 +30,5 @@ The runner is not yet chosen. Vitest with React Testing Library and jsdom fits t
 
 - Co-locate tests next to the code as `*.test.ts` / `*.test.tsx`.
 - Test behavior and rendered output, not implementation details.
-- Mock Clerk at the module boundary (`@clerk/clerk-react`) and flip `isSignedIn` per test.
+- Mock Clerk at the module boundary (`@clerk/react`) and flip `isSignedIn` per test.
 - Tests must be deterministic and run once (`vitest --run`), never in watch mode in automated runs.

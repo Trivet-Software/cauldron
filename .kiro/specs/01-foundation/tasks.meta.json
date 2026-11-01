@@ -1,0 +1,754 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Create root workspace files": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285216
+      },
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497292604
+      },
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505272151
+      }
+    ],
+    "1.2 Scaffold `@cauldron/core` package": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285277
+      },
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497297110
+      },
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505275163
+      }
+    ],
+    "1.3 Scaffold `web-kit` package": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285322
+      },
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497299444
+      },
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505278475
+      }
+    ],
+    "2.1 Configure TypeScript strict mode across workspaces": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285349
+      },
+      {
+        "executionId": "53100e7d-8460-4e25-afbc-6c963cabfec1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505588252
+      },
+      {
+        "executionId": "1f4f4d02-a486-4b90-8341-adb80f8549d2",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505660992
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793506180915
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793506371294
+      }
+    ],
+    "2.2 Configure ESLint flat config at root": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285375
+      },
+      {
+        "executionId": "53100e7d-8460-4e25-afbc-6c963cabfec1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505590778
+      },
+      {
+        "executionId": "1f4f4d02-a486-4b90-8341-adb80f8549d2",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505667314
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793506182526
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793539772159
+      }
+    ],
+    "2.3 Create Kiro PostFileSave hook for lint-on-save": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285403
+      },
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497301887
+      },
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505281619
+      }
+    ],
+    "3.1 Configure the Recipe Box Vite app entry": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285425
+      },
+      {
+        "executionId": "53100e7d-8460-4e25-afbc-6c963cabfec1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505592660
+      },
+      {
+        "executionId": "1f4f4d02-a486-4b90-8341-adb80f8549d2",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505669194
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793506175240
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793506179317
+      }
+    ],
+    "3.2 Create Recipe Box package.json with dependencies": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285448
+      },
+      {
+        "executionId": "53100e7d-8460-4e25-afbc-6c963cabfec1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505595391
+      },
+      {
+        "executionId": "1f4f4d02-a486-4b90-8341-adb80f8549d2",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505672017
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793506184648
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793539777937
+      }
+    ],
+    "3.3 Create Recipe Box `lib/env.ts` with fail-fast `validateEnv`": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285471
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793506388209
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793539791061
+      }
+    ],
+    "3.4 Scaffold the Research Library Vite app": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285494
+      },
+      {
+        "executionId": "53100e7d-8460-4e25-afbc-6c963cabfec1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505598630
+      },
+      {
+        "executionId": "1f4f4d02-a486-4b90-8341-adb80f8549d2",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505673766
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793506186134
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793539784561
+      }
+    ],
+    "3.5 Write unit tests for `validateEnv`": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285517
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546215316
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546313511
+      }
+    ],
+    "4. Checkpoint — monorepo, tooling, and app shells in place": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285540
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793547161134
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793547192145
+      }
+    ],
+    "5.1 Create `web-kit` theme.css with Tailwind CSS variables": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285564
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793506692071
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793539796404
+      }
+    ],
+    "5.2 Set up Tailwind + shadcn/ui base across `web-kit` and Recipe Box": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285585
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793506695257
+      },
+      {
+        "executionId": "bd7ba084-d8f8-4e06-8cbd-0e56b5de5541",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793545276959
+      }
+    ],
+    "5.3 Create the `web-kit` Header component": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285610
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793540985767
+      },
+      {
+        "executionId": "bd7ba084-d8f8-4e06-8cbd-0e56b5de5541",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793545277443
+      }
+    ],
+    "5.4 Write unit tests for the Header component": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285635
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546323495
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546989933
+      }
+    ],
+    "6.1 Create `router.tsx` auth bridge and app router": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285657
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793506700275
+      },
+      {
+        "executionId": "bd7ba084-d8f8-4e06-8cbd-0e56b5de5541",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793545314983
+      },
+      {
+        "executionId": "bd7ba084-d8f8-4e06-8cbd-0e56b5de5541",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793545318216
+      },
+      {
+        "executionId": "bd7ba084-d8f8-4e06-8cbd-0e56b5de5541",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793545373624
+      }
+    ],
+    "6.2 Create the `__root.tsx` layout route": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285682
+      },
+      {
+        "executionId": "bd7ba084-d8f8-4e06-8cbd-0e56b5de5541",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793545376010
+      },
+      {
+        "executionId": "bd7ba084-d8f8-4e06-8cbd-0e56b5de5541",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793545404615
+      }
+    ],
+    "6.3 Create the public home route": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285707
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793540991221
+      },
+      {
+        "executionId": "bd7ba084-d8f8-4e06-8cbd-0e56b5de5541",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793545277993
+      }
+    ],
+    "6.4 Create the public sign-in route": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285732
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793540997992
+      },
+      {
+        "executionId": "bd7ba084-d8f8-4e06-8cbd-0e56b5de5541",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793545315385
+      },
+      {
+        "executionId": "bd7ba084-d8f8-4e06-8cbd-0e56b5de5541",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793545317707
+      },
+      {
+        "executionId": "bd7ba084-d8f8-4e06-8cbd-0e56b5de5541",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793545373651
+      }
+    ],
+    "6.5 Create the pathless `_auth.tsx` protected layout route": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285758
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793541004087
+      },
+      {
+        "executionId": "bd7ba084-d8f8-4e06-8cbd-0e56b5de5541",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793545279238
+      },
+      {
+        "executionId": "bd7ba084-d8f8-4e06-8cbd-0e56b5de5541",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793545302512
+      }
+    ],
+    "6.6 Create the `web-kit` API client with Clerk token": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285790
+      },
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793506704935
+      },
+      {
+        "executionId": "bd7ba084-d8f8-4e06-8cbd-0e56b5de5541",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793545278797
+      }
+    ],
+    "6.7 Write unit tests for the AuthBridge / router context": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285811
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546324295
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546991778
+      }
+    ],
+    "6.8 Write unit tests for the API client": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285834
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546325094
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546991928
+      }
+    ],
+    "6.9 Write integration tests for routing + auth": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285856
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546326294
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546992749
+      }
+    ],
+    "6.10 Write snapshot tests for the home page and header": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285878
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546326814
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546993437
+      }
+    ],
+    "7. Checkpoint — routing and auth wired": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285900
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793547195124
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793548118187
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793548121277
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793548306928
+      }
+    ],
+    "8.1 Create `.env.example` documenting required variables": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285923
+      },
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497304750
+      },
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505284726
+      },
+      {
+        "executionId": "53100e7d-8460-4e25-afbc-6c963cabfec1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505581373
+      },
+      {
+        "executionId": "53100e7d-8460-4e25-afbc-6c963cabfec1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505583787
+      }
+    ],
+    "8.2 Create the Railway deploy config": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285943
+      },
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497307361
+      },
+      {
+        "executionId": "53100e7d-8460-4e25-afbc-6c963cabfec1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505558091
+      }
+    ],
+    "8.3 Create the Caddyfile with SPA fallback": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285966
+      },
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497308887
+      },
+      {
+        "executionId": "53100e7d-8460-4e25-afbc-6c963cabfec1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505561456
+      }
+    ],
+    "9.1 Finalize Recipe Box `main.tsx` composition root": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497285989
+      },
+      {
+        "executionId": "bd7ba084-d8f8-4e06-8cbd-0e56b5de5541",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793545408878
+      },
+      {
+        "executionId": "bd7ba084-d8f8-4e06-8cbd-0e56b5de5541",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793545439285
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546317698
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546320484
+      }
+    ],
+    "9.2 Run TypeScript strict typecheck": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497286010
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793547076009
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793547129171
+      }
+    ],
+    "9.3 Run the production build": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497286034
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546998569
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793547075518
+      }
+    ],
+    "9.4 Run ESLint": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497286057
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793547129736
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793547154335
+      }
+    ],
+    "10. Final checkpoint — Ensure all tests pass and the build is green": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793497286077
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793548307643
+      },
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793548355044
+      }
+    ],
+    "1. Set up monorepo structure and workspace configuration": [
+      {
+        "executionId": "7c89fb13-8510-42fb-a49d-5be783e8e3b1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505278506
+      }
+    ],
+    "8. Environment and deployment configuration": [
+      {
+        "executionId": "53100e7d-8460-4e25-afbc-6c963cabfec1",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793505583825
+      }
+    ],
+    "2. Set up build and dev tooling": [
+      {
+        "executionId": "a03b1480-7cf9-4bdc-97fa-f4bfb6b5bca7",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793539772207
+      }
+    ],
+    "3. Set up Vite + TanStack Router app shells": [
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546313538
+      }
+    ],
+    "5. Implement theming and shared UI in `web-kit`": [
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546989968
+      }
+    ],
+    "6. Implement routing and the auth bridge": [
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793546993462
+      }
+    ],
+    "9. Wire the composition root and verify the build": [
+      {
+        "executionId": "0af70ea7-0c0e-4903-8d06-63770f7f19f4",
+        "chatSessionId": "sess_81db1e29-21c6-4349-aaea-0df79eff60ce",
+        "timestamp": 1793547154365
+      }
+    ]
+  }
+}

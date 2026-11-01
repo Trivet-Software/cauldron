@@ -59,7 +59,7 @@ cauldron/
 - **web-kit exports**: uses a scoped `exports` map (`./components`, `./components/*`, `./lib/utils`, `./theme.css`, `./auth`) rather than a single barrel `index.ts`. Import subpaths explicitly.
 - **Path alias**: apps alias `@` → `./src`. Use `@/...` imports within app source.
 - **Routing**: TanStack file-based routes live in `src/routes/`. Protected routes nest under the pathless `_auth.tsx` layout; the `beforeLoad` guard reads auth state from router context. Generated `routeTree.gen.ts` is gitignored — never edit by hand.
-- **Specs**: `.kiro/specs/` holds numbered spec directories (`NN-name/`), each with `requirements.md`, `design.md`, and `tasks.md`. Read the relevant spec before working in that area.
+- **Specs**: `.kiro/specs/` holds numbered spec directories (`NN-name/`), each with `requirements.md`, `design.md`, and `tasks.md`. Read the relevant spec before working in that area. To insert a spec between two existing ones without renumbering, use a half step (`NN.5-name/`, e.g. `01.5-backend-foundation`); it sorts between `NN-` and the next number. Specs cross-reference each other by name, not number.
 - **Hooks**: `.kiro/hooks/` holds Kiro v2 hook JSON (currently `lint-on-save.json`).
 - **Steering**: `.kiro/steering/` holds these always-included guidance docs.
 - **Planned vs. present**: entries marked "(planned)" above are defined in `.kiro/specs/01-foundation/tasks.md` but not yet on disk. Check the task checkboxes there before assuming a file exists.

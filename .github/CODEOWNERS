@@ -1,0 +1,10 @@
+# Default owner
+*                       @trivet-software-bm
+
+# Sensitive paths
+/.github/               @trivet-software-bm
+/Caddyfile              @trivet-software-bm
+/nixpacks.toml          @trivet-software-bm
+/SECURITY.md            @trivet-software-bm
+/web-kit/src/auth/      @trivet-software-bm
+/pnpm-lock.yaml         @trivet-software-bm

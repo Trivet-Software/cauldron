@@ -8,6 +8,13 @@ Order: workspace and tooling first, then the database, so every later layer can 
 
 Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no Docker), and database integration tests in `pnpm test:db` against the local Supabase stack. No property-based tests apply.
 
+### Delivery phases
+
+`01.7-walking-skeleton` builds on part of this plan, so the work lands in two phases. The dependency graph orders every phase 1 task before phase 2.
+
+- **Phase 1, before the walking skeleton:** 1.1–1.5, 2.1–2.5, 3.1, 3.3–3.6, 5.1, 5.3, 5.4, 6.1, 6.2, 7.1–7.3, 7.5–7.7, 9.1–9.5, 9.7–9.10, 11.1 and 11.2.
+- **Phase 2, after or alongside the walking skeleton:** 2.6, 3.2, 3.7, 5.2, 5.5, 7.4, 7.8, 9.6, 9.11, 11.3, 12, 13 and 14.
+
 ## Tasks
 
 - [ ] 1. Workspace, runtime and tooling
@@ -58,10 +65,14 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
     - Private `sources` bucket (`public = false`, 20 MB object limit)
     - `storage.objects` policies for `authenticated`: `select`, `insert` and `delete` only where the first path segment equals the token's `sub`; no `update` policy; nothing for `anon`
     - _Requirements: 5.1, 5.2_
-  - [ ] 2.6 Register Clerk as a third-party auth provider in production
-    - Activate the Supabase integration in the Clerk dashboard (adds `role: "authenticated"` to session tokens) and add Clerk with the instance domain under Supabase → Authentication → Third-Party Auth; disable the Data API on the hosted project
-    - Operator task: use the Clerk and Supabase dashboards or MCP servers; record the domain used
-    - _Requirements: 4.1_
+  - [ ] 2.6 Write the production setup runbook
+    - `docs/production-setup.md`, the checklist an operator follows once per environment. Its first section registers Clerk as a Supabase third-party auth provider: activate the Supabase integration in the Clerk dashboard (adds `role: "authenticated"` to session tokens), add Clerk with the instance domain under Supabase → Authentication → Third-Party Auth, and disable the Data API on the hosted project
+    - Later sections:
+      - The GitHub `production` environment and its secrets (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, `SUPABASE_PROJECT_REF`)
+      - The Railway services: `RAILWAY_DOCKERFILE_PATH`, `SERVICE`/`APP`, reference variables for `APP_ORIGINS` and `VITE_API_BASE_URL`, backend secrets, `/health` checks, restart policy, `RAILWAY_DEPLOYMENT_DRAINING_SECONDS=30` on `worker`, watch paths, and "Wait for CI" on `api` and `worker`
+      - Adding `migrate` as a required status check in `protect-main` after its first run
+      - The production checks the smoke script (13.5) can't automate: signing in to Recipe Box and seeing `/v1/me` data on Account, inserting a `ping` job, redeploying `worker` mid-job, and whether "Wait for CI" holds commits that don't trigger `migrate`
+    - _Requirements: 4.1, 9.1, 9.2_
 
 - [ ] 3. Data access and storage in `core`
   - [ ] 3.1 Implement the connection and `withActor` helper
@@ -115,11 +126,13 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
     - `recordingProviders` that refuses `NODE_ENV=production`
     - `createProviders(env)` selecting `openrouter`, `mock` or `record`
     - _Requirements: 7.3, 7.4_
-  - [ ] 5.4 Write unit tests for providers
-    - OpenRouter request bodies (structured output, image parts, embedding `dimensions`) with mocked `fetch`; usage and cost parsing, plus the pricing fallback
+  - [ ] 5.4 Write unit tests for the mock providers
+    - Key is stable across object key order and changes when image bytes change; recorded result returned with its usage; a miss throws `MissingRecordingError`; `record` mode is refused in production; `createProviders` picks the implementation from `PROVIDERS`
+    - _Requirements: 7.1, 7.3, 7.4_
+  - [ ] 5.5 Write unit tests for the OpenRouter providers
+    - Request bodies (structured output, image parts, embedding `dimensions`) with mocked `fetch`; usage and cost parsing, plus the pricing fallback
     - Wrong vector length errors; 429 retried then `ProviderError`; the key is absent from error text
-    - Mock: key is stable across object key order; recorded result returned with its usage; a miss throws `MissingRecordingError`; `record` mode is refused in production
-    - _Requirements: 7.1, 7.2, 7.3, 7.4_
+    - _Requirements: 7.2, 7.4_
 
 - [ ] 6. Job queue
   - [ ] 6.1 Implement `core/src/queue`
@@ -151,14 +164,17 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
     - _Requirements: 7.4, 7.5, 7.6_
   - [ ] 7.5 Wire the worker entry point
     - `src/index.ts`: validate env (exit 1 on `EnvError`), check that `EMBEDDING_DIMENSIONS` equals the column size, create the db pool (`WORKER_CONCURRENCY + 2`), providers and storage config, start the loop and the timers, install signal handlers; pino logging
+    - Start the re-embed scheduler only once 7.4 exists; until then the entry point runs the loop and the reaper
     - _Requirements: 6.4, 8.3_
   - [ ] 7.6 Write unit tests for the worker loop
     - Using an in-memory queue fake: never runs more than `WORKER_CONCURRENCY` jobs; a heartbeat returning `false` aborts the handler and discards its result; `NonRetryableError` → `fail` with `retryable: false`; shutdown stops claiming, waits for running handlers, then releases unfinished ones
     - _Requirements: 6.2, 6.4_
-  - [ ] 7.7 Write worker integration tests
+  - [ ] 7.7 Write the `ping` integration test
     - `ping` job enqueued → worker run claims it → status `done`
+    - _Requirements: 6.3_
+  - [ ] 7.8 Write the re-embed integration test
     - `reembed` with mock embeddings updates a stale item's vector and model, and writes exactly one `usage` row even when the job runs twice
-    - _Requirements: 6.3, 7.5, 7.6_
+    - _Requirements: 7.5, 7.6_
 
 - [ ] 8. Checkpoint: providers, queue and worker
   - Ensure `pnpm test`, `pnpm test:db`, `pnpm typecheck` and `pnpm lint` pass; ask the user if questions arise.
@@ -185,28 +201,32 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
     - `resolvePrincipal`: header only (cookies and query strings ignored); no header → anonymous; malformed or invalid → 401; valid → `{ kind: 'user', userId: sub, tenantId: sub, sessionId: sid }`
     - `requireUser()` → 401 before the handler runs; a helper mapping a principal to an `Actor`
     - _Requirements: 2.1, 2.2, 2.3, 2.4_
-  - [ ] 9.6 Implement the developer-role lookup
+  - [ ] 9.6 Implement the developer-role lookup and `GET /v1/me`
     - `isDeveloper(userId)` using the Clerk Backend API (60 s per-user cache): `publicMetadata.role === 'developer'`, or a verified email in `DEVELOPER_EMAILS` (lower-cased); a Clerk failure throws so the route returns 503
+    - `GET /v1/me` (`access: 'user'`) returning `{ userId, tenantId, isDeveloper }` with Zod response schemas, registered in `createApp`
     - _Requirements: 2.5_
-  - [ ] 9.7 Implement `/health` and `/v1/me`
-    - `/health` outside `/v1`, with no CORS or auth: DB `select 1` with a 2 s timeout (200 or 503), `version` from `RAILWAY_GIT_COMMIT_SHA`, embedding model and dimensions, and `itemsNeedingReembed` cached for 60 s
-    - `GET /v1/me` (`access: 'user'`) returning `{ userId, tenantId, isDeveloper }` with Zod response schemas
-    - _Requirements: 1.2, 2.5, 7.6_
+  - [ ] 9.7 Implement `/health`
+    - Outside `/v1`, with no CORS or auth: DB `select 1` with a 2 s timeout (200 or 503), `version` from `RAILWAY_GIT_COMMIT_SHA`, and the configured embedding model and dimensions
+    - `embeddings.itemsNeedingReembed` (cached for 60 s) is added with 3.2; leave it out until then
+    - _Requirements: 1.2, 7.6_
   - [ ] 9.8 Wire `createApp` and the API entry point
     - `createApp(deps)` assembled as in the design (request ID → `/health` → `/v1` sub-app with CORS, `resolvePrincipal`, routes, OpenAPI document → `notFound`/`onError`)
     - `src/index.ts`: validate env, check embedding dimensions, create the db pool (10), providers and Clerk client, serve on `PORT`, close the server and pool on `SIGTERM`; pino with the `Authorization` header redacted
     - _Requirements: 1.1, 1.2, 8.3_
   - [ ] 9.9 Write unit tests for the API
-    - With `app.request()` and injected fakes:
+    - With `app.request()` and injected fakes, plus a test-only route defined without `access` to exercise the closed default:
       - `/health` returns 200 without a token, and 503 when the DB probe fails
-      - `/v1/openapi.json` is served anonymously and lists `/v1/me` with `bearerAuth`; every operation has an explicit `security` field
-      - `/v1/me`: no token → 401 envelope; rejected token → 401; valid token → `userId = tenantId = sub`; developer cases (metadata role, verified email, unverified email, Clerk failure → 503)
+      - `/v1/openapi.json` is served anonymously; every operation has an explicit `security` field, and the test route has `bearerAuth`
+      - Test route: no token → 401 envelope before the handler runs; rejected token → 401; valid token → principal with `userId = tenantId = sub`
       - Unknown route → 404 envelope; thrown error → 500 with a generic message; invalid input → 400 `validation_failed`
       - CORS: allowed origin echoed, other origins get no header, preflight returns the allowed headers
-    - _Requirements: 1.2, 1.3, 1.4, 1.5, 2.3, 2.4, 2.5_
+    - _Requirements: 1.2, 1.3, 1.4, 1.5, 2.2, 2.3, 2.4_
   - [ ] 9.10 Write unit tests for the token verifier wrapper
     - Mock `@clerk/backend` at the module boundary: `authorizedParties` and `jwtKey` (or `secretKey`) are passed through; a thrown verification error becomes 401; `Bearer` parsing rejects other schemes and empty tokens
     - _Requirements: 2.1, 2.3_
+  - [ ] 9.11 Write unit tests for `/v1/me`
+    - No token → 401 envelope; valid token → `userId = tenantId = sub`; developer cases: metadata role, verified listed email, unverified listed email (false), Clerk failure → 503; the OpenAPI document lists `/v1/me` with `bearerAuth`
+    - _Requirements: 2.3, 2.5_
 
 - [ ] 10. Checkpoint: API
   - Ensure `pnpm test`, `pnpm test:db`, `pnpm typecheck` and `pnpm lint` pass, and that `pnpm dev:stack` starts the API, worker and Recipe Box against the local stack; ask the user if questions arise.
@@ -238,35 +258,23 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
   - [ ] 13.2 Create `Dockerfile.app` and retire `nixpacks.toml`
     - `node:24-slim` build stage with `ARG APP`, `ARG VITE_CLERK_PUBLISHABLE_KEY` and `ARG VITE_API_BASE_URL`; `caddy:2-alpine` runtime with `SITE_ROOT=/srv`
     - Change the `Caddyfile` root to `{$SITE_ROOT:./apps/recipe-box/dist}`; delete `nixpacks.toml`
+    - In `.github/CODEOWNERS`, replace the `/nixpacks.toml` entry with `/Dockerfile.*` and add the new sensitive paths `/supabase/migrations/`, `/services/api/src/auth/` and `/core/src/db/`
     - _Requirements: 9.1, 9.2_
   - [ ] 13.3 Add the `migrate` GitHub Actions workflow
-    - `.github/workflows/migrate.yml` per the design: push to `main` on `supabase/migrations/**`, plus `workflow_dispatch`; `contents: read`; non-cancelling concurrency group; `production` environment secrets; `supabase link` then `supabase db push`; actions pinned to commit SHAs
-    - Create the `production` environment with `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD` and `SUPABASE_PROJECT_REF` (operator step)
+    - `.github/workflows/migrate.yml` per the design: push to `main` on `supabase/migrations/**`, plus `workflow_dispatch`; `contents: read`; non-cancelling concurrency group; secrets from the `production` environment; `supabase link` then `supabase db push`; actions pinned to commit SHAs
     - _Requirements: 3.4_
-  - [ ] 13.4 Configure the Railway services
-    - `api`, `worker` and `recipe-box` in the production environment
-      - `RAILWAY_DOCKERFILE_PATH` and the `SERVICE`/`APP` variables
-      - Reference variables `APP_ORIGINS` and `VITE_API_BASE_URL`, plus backend secrets
-      - `/health` health checks on `api` and `recipe-box`; restart-on-failure for `worker`; `RAILWAY_DEPLOYMENT_DRAINING_SECONDS=30` on `worker`
-      - Watch paths per the design; "Wait for CI" on `api` and `worker`
-    - Operator task through the Railway dashboard or MCP server
-    - After the first `migrate` run, add it as a required status check in the `protect-main` ruleset
-    - _Requirements: 9.1_
-  - [ ] 13.5 Run the deployment smoke checks
-    - `docker build` both Dockerfiles locally; the API image answers `/health`; the Recipe Box image serves `/`, `/account` (deep link) and `/health`; both images report Node v24
+  - [ ] 13.4 Run the local deployment smoke checks
+    - `docker build` both Dockerfiles; the API image answers `/health`; the Recipe Box image serves `/`, `/account` (deep link) and `/health`; both images report Node v24
     - `actionlint` passes on the workflow
     - _Requirements: 9.1_
-  - [ ] 13.6 Verify in production
-    - Run the design's production verification list:
-      - The `migrate` run succeeded and `supabase migration list` is in sync
-      - `api` and `recipe-box` are healthy, and `worker` is running
-      - Signing in to Recipe Box shows `/v1/me` data on Account
-      - Calling `/v1/me` without a token returns 401 with the error envelope
-      - A foreign `Origin` gets no CORS header
-      - A `ping` job reaches `done`
-      - Redeploying `worker` mid-job leaves no job `running`
-    - Confirm whether Railway's "Wait for CI" holds commits that don't trigger `migrate`; if it does, drop the workflow's `paths` filter
-    - _Requirements: 9.1, 9.2, 9.3_
+  - [ ] 13.5 Write the production smoke-check script
+    - `scripts/smoke-production.sh <api-url> <app-url>` (POSIX shell and `curl`), exiting non-zero on the first failure:
+      - API `/health` returns 200 with `"status":"ok"`
+      - `/v1/me` without a token returns 401 with the error envelope
+      - A foreign `Origin` on `/v1/openapi.json` gets no `Access-Control-Allow-Origin`
+      - App `/`, `/account` and `/health` return 200
+    - The runbook (2.6) lists it as the first check after each deploy
+    - _Requirements: 9.1, 9.3_
 
 - [ ] 14. Steering updates
   - [ ] 14.1 Update `tech.md`, `structure.md` and `testing.md`
@@ -276,11 +284,12 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
     - _Requirements: 8.1_
 
 - [ ] 15. Final checkpoint
-  - Ensure all tests, typecheck, lint and build pass, and production verification (13.6) is complete; ask the user if questions arise.
+  - Ensure all tests, typecheck, lint and build pass; ask the user if questions arise. Production setup and verification follow the runbook (2.6) and the smoke script (13.5).
 
 ## Notes
 
-- Operator tasks (2.6, the secrets in 13.3, 13.4, 13.6) change hosted Clerk, Supabase, GitHub or Railway settings. Confirm with the user before running them, and use the Supabase, Clerk and Railway MCP servers where available.
+- Changes to hosted Clerk, Supabase, GitHub or Railway settings aren't tasks here; they are steps in the runbook (2.6). Confirm with the user before carrying any of them out, and use the Supabase, Clerk and Railway MCP servers where available.
+- `01.7-walking-skeleton` refers to these task numbers. Keep them stable: give new tasks new numbers instead of renumbering.
 - `pnpm test:db` needs Docker and `pnpm db:start`. It is part of the test suite for Requirement 4.4 but isn't run by `pnpm test`.
 - Pin every new dependency to an exact or caret version that exists at implementation time, and add test dependencies deliberately, per the testing steering.
 - Commit on a branch and open a PR; `main` is protected.
@@ -292,21 +301,22 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
 ```json
 {
   "waves": [
-    { "id": 0, "tasks": ["1.1", "2.1", "2.6", "12.1"] },
-    { "id": 1, "tasks": ["1.2", "1.3", "2.2", "13.3"] },
-    { "id": 2, "tasks": ["1.4", "2.3", "5.1"] },
-    { "id": 3, "tasks": ["1.5", "2.4", "2.5", "5.2", "5.3"] },
+    { "id": 0, "tasks": ["1.1", "2.1"] },
+    { "id": 1, "tasks": ["1.2", "2.2", "11.1", "11.2"] },
+    { "id": 2, "tasks": ["1.3", "1.4", "2.3", "5.1"] },
+    { "id": 3, "tasks": ["1.5", "2.4", "2.5", "5.3"] },
     { "id": 4, "tasks": ["3.1", "3.3", "5.4"] },
-    { "id": 5, "tasks": ["3.2", "3.4", "3.5", "6.1"] },
-    { "id": 6, "tasks": ["3.6", "3.7", "6.2", "7.1", "9.1"] },
+    { "id": 5, "tasks": ["3.4", "3.5", "6.1"] },
+    { "id": 6, "tasks": ["3.6", "6.2", "7.1", "9.1"] },
     { "id": 7, "tasks": ["7.2", "9.2", "9.4", "9.5"] },
-    { "id": 8, "tasks": ["7.3", "7.4", "9.3", "9.6"] },
+    { "id": 8, "tasks": ["7.3", "9.3"] },
     { "id": 9, "tasks": ["7.5", "9.7"] },
     { "id": 10, "tasks": ["7.6", "7.7", "9.8"] },
-    { "id": 11, "tasks": ["9.9", "9.10", "11.1", "11.2", "13.1", "13.2"] },
-    { "id": 12, "tasks": ["11.3", "12.2", "13.5"] },
-    { "id": 13, "tasks": ["13.4", "14.1"] },
-    { "id": 14, "tasks": ["13.6"] }
+    { "id": 11, "tasks": ["9.9", "9.10"] },
+    { "id": 12, "tasks": ["2.6", "3.2", "3.7", "5.2", "9.6", "12.1", "13.3"] },
+    { "id": 13, "tasks": ["5.5", "7.4", "9.11", "11.3", "13.1", "13.2"] },
+    { "id": 14, "tasks": ["7.8", "12.2", "13.4", "13.5"] },
+    { "id": 15, "tasks": ["14.1"] }
   ]
 }
 ```

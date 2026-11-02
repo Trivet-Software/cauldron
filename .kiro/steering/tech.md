@@ -5,6 +5,11 @@
 - **pnpm workspaces** — single lockfile, packages defined in `pnpm-workspace.yaml`: `core`, `web-kit`, `apps/*`.
 - All `package.json` files are `private: true` and `"type": "module"` (ESM throughout).
 
+## Runtime
+
+- **Node 24 LTS** for local development, builds and every deployed service. Node 20 reached end of life in April 2026; don't target it.
+- `@types/node` should match (`^24`). The `engines` field, `.nvmrc` and Node 24 Dockerfiles land with `01.5-backend-foundation`.
+
 ## Language & Types
 
 - **TypeScript 5.6+**, strict mode enforced from the root `tsconfig.json` (also: `noUnusedLocals`, `noUnusedParameters`, `noFallthroughCasesInSwitch`, `bundler` moduleResolution, `ES2022` target, `react-jsx`).
@@ -39,7 +44,7 @@
 
 ## Deployment
 
-- **Railway** via `nixpacks.toml` — Node 20 LTS + pnpm, builds only the `recipe-box` workspace, outputs to `apps/recipe-box/dist/`.
+- **Railway**: `nixpacks.toml` currently describes a Node 20 + pnpm build of the `recipe-box` workspace, output to `apps/recipe-box/dist/`. Railway's builders are Railpack and Dockerfile, so this file is likely ignored. `01.5-backend-foundation` replaces it with Node 24 Dockerfiles (`Dockerfile.app` for apps, `Dockerfile.service` for `api` and `worker`).
 - **Caddy** serves the static bundle (`Caddyfile`) with SPA fallback (`try_files {path} /index.html`) and a dedicated `/health` endpoint.
 
 ## Commands

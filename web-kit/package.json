@@ -16,13 +16,13 @@
   },
   "peerDependencies": {
     "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react-dom": "^19.3.1",
     "@clerk/react": "^6.18.4"
   },
   "devDependencies": {
     "@clerk/react": "^6.18.4",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react-dom": "^19.3.1",
     "@types/react": "^18.0.0",
     "tailwindcss": "^4.0.0",
     "vitest": "^5.0.5",

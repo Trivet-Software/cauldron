@@ -74,7 +74,7 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
       - The production checks the smoke script (13.5) can't automate: signing in to Recipe Box and seeing `/v1/me` data on Account, inserting a `ping` job, redeploying `worker` mid-job, and whether "Wait for CI" holds commits that don't trigger `migrate`
     - _Requirements: 4.1, 9.1, 9.2_
 
-- [ ] 3. Data access and storage in `core`
+- [x] 3. Data access and storage in `core`
   - [x] 3.1 Implement the connection and `withActor` helper
     - `core/src/db`: `createDb(url)` (postgres.js, `prepare: false`, pool size parameter), `Actor`, `SYSTEM_OWNER = 'system'`, `Scoped`
     - `withActor(db, actor, fn)` sets `request.jwt.claims` and `set local role authenticated` / `anon` inside a transaction; `db.raw` is not exported from `./db`

@@ -3,7 +3,7 @@
 # Railway injects its PORT env var; we fall back to 8080 for local runs.
 
 :{$PORT:8080} {
-	root * ./apps/recipe-box/dist
+	root * {$SITE_ROOT:./apps/recipe-box/dist}
 
 	# Health check endpoint — answer 200 here so Railway's probe gets a real
 	# response instead of the SPA shell. This must be a `handle` block (not a

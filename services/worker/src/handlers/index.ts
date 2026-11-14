@@ -17,6 +17,7 @@ import {
 } from '@cauldron/core/storage'
 
 import { pingHandler } from './ping'
+import { reembedHandler } from './reembed'
 
 export interface HandlerContext<P = unknown> {
   readonly job: Job<P>
@@ -41,7 +42,7 @@ export type HandlerRegistry = Readonly<Record<string, JobHandler>>
 
 export const handlers: HandlerRegistry = {
   ping: pingHandler, // Requirement 6.3
-  // reembed: reembedHandler registers here (task 7.4, Requirement 7.6).
+  reembed: reembedHandler, // Requirements 7.5 and 7.6
 }
 
 /**

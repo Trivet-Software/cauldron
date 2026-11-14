@@ -55,20 +55,26 @@ describe('main', () => {
   })
 
   it('exits 1 when the providers cannot be built', () => {
-    const exit = vi.fn()
-    const result = main(
-      {
-        ...baseEnv,
-        PROVIDERS: 'openrouter',
-        OPENROUTER_API_KEY: 'key',
-        LLM_COMPILE_MODEL: 'a/b',
-        LLM_DRAFT_MODEL: 'a/c',
-        LOG_LEVEL: 'silent',
-      },
-      { exit, writeStderr: vi.fn() },
-    )
-    expect(result).toBeUndefined()
-    expect(exit).toHaveBeenCalledWith(1)
+    // createProviders refuses PROVIDERS=record when NODE_ENV is production.
+    vi.stubEnv('NODE_ENV', 'production')
+    try {
+      const exit = vi.fn()
+      const result = main(
+        {
+          ...baseEnv,
+          PROVIDERS: 'record',
+          OPENROUTER_API_KEY: 'key',
+          LLM_COMPILE_MODEL: 'a/b',
+          LLM_DRAFT_MODEL: 'a/c',
+          LOG_LEVEL: 'silent',
+        },
+        { exit, writeStderr: vi.fn() },
+      )
+      expect(result).toBeUndefined()
+      expect(exit).toHaveBeenCalledWith(1)
+    } finally {
+      vi.unstubAllEnvs()
+    }
   })
 })
 

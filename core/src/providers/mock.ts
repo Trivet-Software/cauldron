@@ -12,6 +12,7 @@ import {
   type Recording,
   type RecordingStore,
 } from './recordings'
+import { openRouterProviders } from './openrouter'
 import { requestKey, sha256Hex, type RequestKind } from './request-key'
 import {
   type CompletionRequest,
@@ -240,13 +241,10 @@ export function recordingProviders(
 // It lives here rather than in `./providers` because the mock and record modes
 // need the Node-only file store, and `./providers` stays isomorphic.
 //
-// Seam for task 5.2 (OpenRouter): the real providers arrive through
-// `options.openrouter`. Until 5.2 lands there is no default, so `openrouter`
-// and `record` modes throw OpenRouterUnavailableError unless a factory is
-// injected. When 5.2 lands, default `openrouter` to its factory, e.g.
-// `const openrouter = options.openrouter ?? openRouterProviders`.
+// `options.openrouter` replaces the real providers (tests); the default is
+// `openRouterProviders`.
 
-/** Builds the real providers from validated env (task 5.2). */
+/** Builds the real providers from validated env. */
 export type OpenRouterFactory = (env: ProviderEnv) => Providers
 
 export interface CreateProvidersOptions {
@@ -255,16 +253,6 @@ export interface CreateProvidersOptions {
   store?: RecordingStore
   // Defaults to process.env.NODE_ENV; `record` is refused in production.
   nodeEnv?: string
-}
-
-export class OpenRouterUnavailableError extends Error {
-  constructor() {
-    super(
-      'OpenRouter providers are not implemented yet (01.5-backend-foundation ' +
-        'task 5.2). Use PROVIDERS=mock, or pass options.openrouter.',
-    )
-    this.name = 'OpenRouterUnavailableError'
-  }
 }
 
 function requireSetting(name: string, value: string | undefined): string {
@@ -284,10 +272,7 @@ export function createProviders(
   const store = () =>
     options.store ??
     fileRecordingStore(requireSetting('MOCK_RECORDINGS_DIR', env.MOCK_RECORDINGS_DIR))
-  const real = () => {
-    if (!options.openrouter) throw new OpenRouterUnavailableError()
-    return options.openrouter(env)
-  }
+  const real = () => (options.openrouter ?? openRouterProviders)(env)
 
   switch (env.PROVIDERS) {
     case 'mock':

@@ -1,7 +1,12 @@
-// Provider interfaces. The OpenRouter implementation lands in task 5.2.
-// Keep this module isomorphic: no Node-only imports. The mock, recording
+// Provider interfaces and the OpenRouter implementation. Keep this module isomorphic: no Node-only imports. The mock, recording
 // providers and createProviders() need the Node-only file store, so they live
 // in `@cauldron/core/providers/mock`.
+export {
+  openRouterEmbeddings,
+  openRouterLlm,
+  openRouterProviders,
+  type OpenRouterOptions,
+} from './openrouter'
 export {
   PROVIDER_ERROR_BODY_LIMIT,
   ProviderError,

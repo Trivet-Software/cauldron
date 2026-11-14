@@ -15,7 +15,6 @@ import {
 import {
   DEFAULT_MOCK_MODELS,
   MissingRecordingError,
-  OpenRouterUnavailableError,
   createProviders,
   fileRecordingStore,
   memoryRecordingStore,
@@ -239,16 +238,10 @@ describe('createProviders', () => {
     expect(openrouter).toHaveBeenCalledWith(env)
   })
 
-  it('throws OpenRouterUnavailableError for openrouter and record without a factory', () => {
-    expect(() => createProviders(realEnv('openrouter'))).toThrow(
-      OpenRouterUnavailableError,
-    )
-    expect(() =>
-      createProviders(realEnv('record'), {
-        store: memoryRecordingStore(),
-        nodeEnv: 'test',
-      }),
-    ).toThrow(OpenRouterUnavailableError)
+  it('defaults to the OpenRouter providers without a factory', () => {
+    const providers = createProviders(realEnv('openrouter'))
+    expect(providers.models).toEqual({ compile: 'real/compile', draft: 'real/draft' })
+    expect(providers.embeddings.dimensions).toBe(DEFAULT_EMBEDDING_DIMENSIONS)
   })
 
   it('wraps the real providers with a recorder for PROVIDERS=record', async () => {

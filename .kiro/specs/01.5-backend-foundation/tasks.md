@@ -104,18 +104,18 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
     - Grants: `authenticated` can't update or delete `usage`, and can't update `jobs`
     - `withActor` itself: the same queries through the helper return only the actor's rows
     - _Requirements: 3.1, 3.2, 3.3, 4.2, 4.3, 4.4_
-  - [ ] 3.7 Write storage policy integration tests
+  - [x] 3.7 Write storage policy integration tests
     - Against local Storage, using tokens the local stack accepts: user B can't download, list or upload under user A's prefix; a signed URL created for A works and stops working after it expires
     - _Requirements: 5.2, 5.3_
 
-- [ ] 4. Checkpoint: database and data access
+- [x] 4. Checkpoint: database and data access
   - Ensure `pnpm test`, `pnpm test:db`, `pnpm typecheck` and `pnpm lint` pass; ask the user if questions arise.
 
-- [ ] 5. LLM and embedding providers
+- [x] 5. LLM and embedding providers
   - [x] 5.1 Define provider interfaces
     - `core/src/providers/types.ts`: `ContentPart` (text, image), `Message`, `Usage`, `CompletionRequest`, `CompletionResult`, `LlmProvider`, `EmbeddingResult`, `EmbeddingProvider`, `Providers`, `ProviderError`
     - _Requirements: 7.1, 7.4_
-  - [ ] 5.2 Implement the OpenRouter providers
+  - [x] 5.2 Implement the OpenRouter providers
     - Completions with `response_format: json_schema` (strict), image parts as `data:` URLs, and usage accounting; embeddings via `/api/v1/embeddings` with `dimensions`, batched up to 100
     - Cost from response usage, falling back to `/api/v1/models` pricing cached for an hour; 60 s and 15 s timeouts combined with the caller's signal; two jittered retries on 429/5xx; the API key is never included in errors
     - Throw when a returned vector's length differs from `dimensions`
@@ -129,7 +129,7 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
   - [x] 5.4 Write unit tests for the mock providers
     - Key is stable across object key order and changes when image bytes change; recorded result returned with its usage; a miss throws `MissingRecordingError`; `record` mode is refused in production; `createProviders` picks the implementation from `PROVIDERS`
     - _Requirements: 7.1, 7.3, 7.4_
-  - [ ] 5.5 Write unit tests for the OpenRouter providers
+  - [x] 5.5 Write unit tests for the OpenRouter providers
     - Request bodies (structured output, image parts, embedding `dimensions`) with mocked `fetch`; usage and cost parsing, plus the pricing fallback
     - Wrong vector length errors; 429 retried then `ProviderError`; the key is absent from error text
     - _Requirements: 7.2, 7.4_
@@ -146,7 +146,7 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
     - `release` restores attempts; `dedupeKey` prevents a second queued job; `enqueue` as user A can't create a job for user B
     - _Requirements: 6.1, 6.2_
 
-- [ ] 7. Worker service
+- [x] 7. Worker service
   - [x] 7.1 Scaffold `services/worker`
     - `package.json` (name `worker`; `dev`: `tsx watch --env-file-if-exists=../../.env.local src/index.ts`; `build`: tsup; `typecheck`; `test`), `tsconfig.json` (`lib: ["ES2022"]`, `types: ["node"]`), `tsup.config.ts` (single bundled `dist/index.js`, `@cauldron/core` inlined), `vitest.config.ts`
     - `src/env.ts` using `parseEnv`: `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, provider settings, `EMBEDDING_*`, `WORKER_CONCURRENCY`, `POLL_INTERVAL_MS`, `SHUTDOWN_GRACE_MS`
@@ -158,7 +158,7 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
     - Concurrency slots, polling every `POLL_INTERVAL_MS` when idle, a 20 s heartbeat per job (aborts on lost lease), the reaper every 15 s
     - On `SIGTERM`/`SIGINT`: stop claiming, wait up to `SHUTDOWN_GRACE_MS`, abort and `release` remaining jobs, close the pool
     - _Requirements: 6.1, 6.2, 6.4_
-  - [ ] 7.4 Implement re-embedding
+  - [x] 7.4 Implement re-embedding
     - Scheduler every 5 minutes: up to 1000 stale items, grouped by tenant into batches of 100, enqueued as `reembed` jobs with a `dedupeKey`
     - `reembed` handler: loads the batch through its scope, embeds `search_text`, updates rows whose model still differs (storing model and dimensions), and writes `usage` with `idempotency_key = reembed:<item id>:<model>`
     - _Requirements: 7.4, 7.5, 7.6_
@@ -172,14 +172,14 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
   - [x] 7.7 Write the `ping` integration test
     - `ping` job enqueued → worker run claims it → status `done`
     - _Requirements: 6.3_
-  - [ ] 7.8 Write the re-embed integration test
+  - [x] 7.8 Write the re-embed integration test
     - `reembed` with mock embeddings updates a stale item's vector and model, and writes exactly one `usage` row even when the job runs twice
     - _Requirements: 7.5, 7.6_
 
-- [ ] 8. Checkpoint: providers, queue and worker
+- [x] 8. Checkpoint: providers, queue and worker
   - Ensure `pnpm test`, `pnpm test:db`, `pnpm typecheck` and `pnpm lint` pass; ask the user if questions arise.
 
-- [ ] 9. API service
+- [x] 9. API service
   - [x] 9.1 Scaffold `services/api`
     - `package.json` (name `api`; same `dev`, `build`, `typecheck`, `test` scripts as the worker), `tsconfig.json`, `tsup.config.ts`, `vitest.config.ts`
     - Pinned dependencies: `hono`, `@hono/node-server`, `@hono/zod-openapi`, `zod`, `@clerk/backend`, `pino`
@@ -224,50 +224,50 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
   - [x] 9.10 Write unit tests for the token verifier wrapper
     - Mock `@clerk/backend` at the module boundary: `authorizedParties` and `jwtKey` (or `secretKey`) are passed through; a thrown verification error becomes 401; `Bearer` parsing rejects other schemes and empty tokens
     - _Requirements: 2.1, 2.3_
-  - [ ] 9.11 Write unit tests for `/v1/me`
+  - [x] 9.11 Write unit tests for `/v1/me`
     - No token → 401 envelope; valid token → `userId = tenantId = sub`; developer cases: metadata role, verified listed email, unverified listed email (false), Clerk failure → 503; the OpenAPI document lists `/v1/me` with `bearerAuth`
     - _Requirements: 2.3, 2.5_
 
-- [ ] 10. Checkpoint: API
+- [x] 10. Checkpoint: API
   - Ensure `pnpm test`, `pnpm test:db`, `pnpm typecheck` and `pnpm lint` pass, and that `pnpm dev:stack` starts the API, worker and Recipe Box against the local stack; ask the user if questions arise.
 
-- [ ] 11. Recipe Box end-to-end call
+- [x] 11. Recipe Box end-to-end call
   - [x] 11.1 Give `useApiClient` a base URL
     - `useApiClient(baseUrl)` joins the base URL and path with `new URL()` and is memoized with `useCallback`; update the existing API-client tests and add a base-URL test
     - _Requirements: 9.2_
   - [x] 11.2 Make `VITE_API_BASE_URL` required in Recipe Box
     - `validateEnv()` throws, naming `VITE_API_BASE_URL`, when it's missing or empty; update `env.test.ts`
     - _Requirements: 9.2_
-  - [ ] 11.3 Show `/v1/me` on the Account page
+  - [x] 11.3 Show `/v1/me` on the Account page
     - `_auth/account.tsx` calls `GET /v1/me` on mount through `useApiClient(env.VITE_API_BASE_URL)` and renders user ID, tenant ID and developer role, or the error envelope's `message`; update routing tests and snapshots that render the page
     - _Requirements: 9.2_
 
-- [ ] 12. Local development documentation
-  - [ ] 12.1 Document backend variables in `.env.example`
+- [x] 12. Local development documentation
+  - [x] 12.1 Document backend variables in `.env.example`
     - Every variable in the design's environment table, grouped by service, with secrets marked as server-only and never `VITE_`-prefixed; remove the "staged for a future backend" note on `CLERK_SECRET_KEY`
     - _Requirements: 8.2_
-  - [ ] 12.2 Document the local stack
+  - [x] 12.2 Document the local stack
     - A "Local development" section in `README.md`: prerequisites (Node 24, pnpm, Docker), `pnpm db:start`, copying `.env.example`, `pnpm dev:stack`, `pnpm test` and `pnpm test:db`
     - Pointing at a configured dev Supabase project instead of the local stack
     - _Requirements: 8.1_
 
-- [ ] 13. Deployment
-  - [ ] 13.1 Create `Dockerfile.service`
+- [x] 13. Deployment
+  - [x] 13.1 Create `Dockerfile.service`
     - Multi-stage `node:24-slim` build per the design (`ARG SERVICE`, `pnpm install --frozen-lockfile --filter "${SERVICE}..."`, tsup build), runtime copying only `dist`, running as `node`; add a `.dockerignore` (`node_modules`, `dist`, `.env*`, `.git`)
     - _Requirements: 9.1_
-  - [ ] 13.2 Create `Dockerfile.app` and retire `nixpacks.toml`
+  - [x] 13.2 Create `Dockerfile.app` and retire `nixpacks.toml`
     - `node:24-slim` build stage with `ARG APP`, `ARG VITE_CLERK_PUBLISHABLE_KEY` and `ARG VITE_API_BASE_URL`; `caddy:2-alpine` runtime with `SITE_ROOT=/srv`
     - Change the `Caddyfile` root to `{$SITE_ROOT:./apps/recipe-box/dist}`; delete `nixpacks.toml`
     - In `.github/CODEOWNERS`, replace the `/nixpacks.toml` entry with `/Dockerfile.*` and add the new sensitive paths `/supabase/migrations/`, `/services/api/src/auth/` and `/core/src/db/`
     - _Requirements: 9.1, 9.2_
-  - [ ] 13.3 Add the `migrate` GitHub Actions workflow
+  - [x] 13.3 Add the `migrate` GitHub Actions workflow
     - `.github/workflows/migrate.yml` per the design: push to `main` on `supabase/migrations/**`, plus `workflow_dispatch`; `contents: read`; non-cancelling concurrency group; secrets from the `production` environment; `supabase link` then `supabase db push`; actions pinned to commit SHAs
     - _Requirements: 3.4_
-  - [ ] 13.4 Run the local deployment smoke checks
+  - [x] 13.4 Run the local deployment smoke checks
     - `docker build` both Dockerfiles; the API image answers `/health`; the Recipe Box image serves `/`, `/account` (deep link) and `/health`; both images report Node v24
     - `actionlint` passes on the workflow
     - _Requirements: 9.1_
-  - [ ] 13.5 Write the production smoke-check script
+  - [x] 13.5 Write the production smoke-check script
     - `scripts/smoke-production.sh <api-url> <app-url>` (POSIX shell and `curl`), exiting non-zero on the first failure:
       - API `/health` returns 200 with `"status":"ok"`
       - `/v1/me` without a token returns 401 with the error envelope
@@ -276,14 +276,14 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
     - The runbook (2.6) lists it as the first check after each deploy
     - _Requirements: 9.1, 9.3_
 
-- [ ] 14. Steering updates
-  - [ ] 14.1 Update `tech.md`, `structure.md` and `testing.md`
+- [x] 14. Steering updates
+  - [x] 14.1 Update `tech.md`, `structure.md` and `testing.md`
     - `tech.md`: backend stack (Hono, postgres.js, Supabase, Clerk backend verification, OpenRouter), Dockerfile deploys instead of `nixpacks.toml`, new commands
     - `structure.md`: `services/`, `supabase/`, the `core` subpath exports, Dockerfiles, `.github/workflows/`, `.nvmrc`; remove `nixpacks.toml`
     - `testing.md`: Vitest in `core` and the services, the `pnpm test:db` integration suite and its local-stack requirement
     - _Requirements: 8.1_
 
-- [ ] 15. Final checkpoint
+- [x] 15. Final checkpoint
   - Ensure all tests, typecheck, lint and build pass; ask the user if questions arise. Production setup and verification follow the runbook (2.6) and the smoke script (13.5).
 
 ## Notes

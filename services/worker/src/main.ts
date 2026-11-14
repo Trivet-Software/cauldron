@@ -5,7 +5,7 @@
 // process handlers, so a test (task 7.7) can run a worker in-process and stop() it.
 // main() is the process glue around it: fail-fast env, signals, exit codes.
 //
-// The re-embed scheduler (task 7.4) starts here alongside the reaper once it exists.
+// The re-embed scheduler (task 7.4) starts here alongside the reaper.
 import { type Logger, pino } from 'pino'
 
 import { EMBEDDING_COLUMN_DIMENSIONS, createDb } from '@cauldron/core/db'
@@ -104,7 +104,11 @@ export function startWorker(env: WorkerEnv, options: StartWorkerOptions = {}): R
     workerId: options.workerId,
     log,
   })
-  const maintenance = createMaintenance({ queue, log })
+  const maintenance = createMaintenance({
+    queue,
+    log,
+    reembed: { db, model: providers.embeddings.model },
+  })
 
   worker.start()
   maintenance.start()

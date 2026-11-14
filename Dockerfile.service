@@ -1,0 +1,19 @@
+# One image recipe for the api and worker services.
+# Build: docker build -f Dockerfile.service --build-arg SERVICE=api .
+FROM node:24-slim AS build
+ARG SERVICE
+RUN test -n "${SERVICE}" || (echo "SERVICE build arg is required (api or worker)" >&2; exit 1)
+RUN corepack enable
+WORKDIR /repo
+COPY . .
+RUN pnpm install --frozen-lockfile --filter "${SERVICE}..."
+RUN pnpm --filter "${SERVICE}" build
+
+FROM node:24-slim
+ARG SERVICE
+ENV NODE_ENV=production
+WORKDIR /app
+# tsup bundles @cauldron/core and every npm dependency into dist/.
+COPY --from=build /repo/services/${SERVICE}/dist ./dist
+USER node
+CMD ["node", "dist/index.js"]

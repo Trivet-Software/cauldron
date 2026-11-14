@@ -2,18 +2,27 @@
   "name": "cauldron",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "dev": "pnpm --filter recipe-box dev",
+    "dev:stack": "pnpm --parallel --filter api --filter worker --filter recipe-box dev",
     "build": "pnpm -r --filter=recipe-box build",
     "lint": "eslint .",
     "typecheck": "pnpm -r typecheck",
-    "test": "pnpm -r test"
+    "test": "pnpm -r test",
+    "test:db": "pnpm -r test:db",
+    "db:start": "supabase start",
+    "db:reset": "supabase db reset",
+    "db:push": "supabase db push"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
     "eslint": "^9.0.0",
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^7.1.1",
+    "supabase": "2.122.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.0.0"
   }

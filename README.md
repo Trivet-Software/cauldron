@@ -96,9 +96,45 @@ LICENSE                  MIT (present)
 
 Cauldron is being built with Kiro, mainly Kiro Crew. The work follows Kiro's spec-driven flow: each feature has a spec in `.kiro/specs/` with requirements, then a design and a task list, worked through in numbered order starting with `01-foundation`. Steering files and agent hooks live in `.kiro/`. The `.kiro/` folder is committed on purpose so anyone can see how the project was planned and built.
 
-## Getting started
+## Local development
 
-Setup instructions are coming once the foundation spec is built.
+### Prerequisites
+
+- Node 24 (see `.nvmrc`)
+- pnpm
+- Docker, running (the local Supabase stack runs in containers)
+- A Clerk application, for sign-in
+
+### Run the local stack
+
+1. Install dependencies: `pnpm install`.
+2. Start local Supabase (Postgres, Storage and the rest). Pass your Clerk instance domain so the local stack trusts Clerk tokens:
+   ```
+   CLERK_DOMAIN=<your-clerk-domain> pnpm db:start
+   ```
+   `pnpm db:reset` rebuilds the local database from the migrations.
+3. Copy the environment file: `cp .env.example .env.local`. Fill in your Clerk keys and `OPENROUTER_API_KEY`. For the Supabase values, run `supabase status -o env` and copy the keys it prints (the default `DATABASE_URL` and `SUPABASE_URL` already point at the local stack). To work without an OpenRouter key, set `PROVIDERS=mock` and `MOCK_RECORDINGS_DIR`.
+4. Start the api, worker and Recipe Box together: `pnpm dev:stack`. The web app is at http://localhost:5173 and the api at http://localhost:8787.
+
+`pnpm dev` starts only the Recipe Box web app.
+
+### Tests
+
+- `pnpm test` runs the unit tests. They don't need a database.
+- `pnpm test:db` runs the integration tests against local Supabase. It needs `pnpm db:start` running and the `TEST_*` values in `.env.local` (the storage suite is skipped if any `TEST_SUPABASE_*` value is unset).
+
+Also available: `pnpm lint` and `pnpm typecheck`.
+
+### Using a dev Supabase project instead
+
+You can point the services at a hosted dev Supabase project instead of the local stack, and skip Docker and `pnpm db:start`:
+
+1. Link the project and apply the migrations: `supabase link --project-ref <ref>`, then `pnpm db:push`.
+2. In `.env.local`, set `DATABASE_URL` to the project's transaction pooler URL, and set `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` and `SUPABASE_SECRET_KEY` from the project's API settings.
+3. Configure the project to accept your Clerk tokens as a third-party auth provider.
+4. Run `pnpm dev:stack` as usual.
+
+Don't run `pnpm test:db` against a shared or hosted project. Keep the `TEST_*` values pointed at the local stack.
 
 ## License
 

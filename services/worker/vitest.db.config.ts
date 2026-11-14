@@ -1,4 +1,11 @@
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitest/config'
+// Load the repo-root .env.local; variables already in the shell win.
+try {
+  process.loadEnvFile(fileURLToPath(new URL('../../.env.local', import.meta.url)))
+} catch {
+  // No .env.local: fall back to whatever the shell exports.
+}
 
 // Worker integration tests against the local database (01.5-backend-foundation task 7.7).
 // Needs the local Supabase stack (`pnpm db:start`) and TEST_DATABASE_URL set to its direct

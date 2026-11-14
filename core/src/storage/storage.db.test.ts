@@ -64,9 +64,11 @@ describe.skipIf(missing.length > 0)(
     ? `storage policies (skipped: set ${missing.join(', ')})`
     : 'storage policies',
   () => {
-    const url = env.url as string
-    const publishableKey = env.publishableKey as string
-    const jwtSecret = env.jwtSecret as string
+    // vitest still runs this body to collect tests when the suite is skipped, so the values
+    // fall back to '' rather than throwing on undefined.
+    const url = env.url ?? ''
+    const publishableKey = env.publishableKey ?? ''
+    const jwtSecret = env.jwtSecret ?? ''
 
     // Unique per run so reruns never collide with leftovers.
     const run = randomUUID().slice(0, 8)
@@ -97,7 +99,7 @@ describe.skipIf(missing.length > 0)(
 
     afterAll(async () => {
       if (uploaded.length === 0) return
-      const admin = createClient(url, env.secretKey as string, { auth: SERVER_AUTH })
+      const admin = createClient(url, env.secretKey ?? '', { auth: SERVER_AUTH })
       const { error } = await admin.storage.from(SOURCES_BUCKET).remove(uploaded)
       if (error) throw new Error(`Cleanup failed: ${error.message}`)
     })

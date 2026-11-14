@@ -2,6 +2,9 @@ packages:
   - 'core'
   - 'web-kit'
   - 'apps/*'
+  - 'services/*'
 allowBuilds:
   '@clerk/shared': false
   esbuild: true
+  # The supabase CLI's postinstall downloads its platform binary.
+  supabase: true

@@ -17,55 +17,55 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
 
 ## Tasks
 
-- [ ] 1. Workspace, runtime and tooling
-  - [ ] 1.1 Move to Node 24 and register the services workspace
+- [x] 1. Workspace, runtime and tooling
+  - [x] 1.1 Move to Node 24 and register the services workspace
     - Add `.nvmrc` (`24`) and `"engines": { "node": ">=24" }` to the root `package.json`
     - Bump `@types/node` to `^24` in every package that uses it (`apps/recipe-box`, plus new packages)
     - Add `'services/*'` to `pnpm-workspace.yaml`
     - Add root scripts `dev:stack`, `db:start`, `db:reset`, `db:push` and `test:db`; leave `dev` unchanged (Recipe Box only)
     - Add the `supabase` CLI as a pinned root devDependency
     - _Requirements: 8.1_
-  - [ ] 1.2 Set up `@cauldron/core` for server modules
+  - [x] 1.2 Set up `@cauldron/core` for server modules
     - Exports map: `.`, `./env`, `./providers`, `./providers/mock`, `./db`, `./db/system`, `./queue`, `./storage`
     - Add pinned dependencies: `zod`, `postgres`, `@supabase/supabase-js`
     - `tsconfig.json`: `types: ["node"]`
     - Add `vitest.config.ts` (node environment, excludes `*.db.test.ts`), plus `test` and `test:db` scripts
     - _Requirements: 1.1_
-  - [ ] 1.3 Add lint guards for privileged database access
+  - [x] 1.3 Add lint guards for privileged database access
     - `no-restricted-imports` in `eslint.config.js`: block `postgres` outside `core/src/db/**` and `core/src/queue/**`, and block `@cauldron/core/db/system` everywhere except the (future) API registration module
     - _Requirements: 4.3_
-  - [ ] 1.4 Implement `parseEnv` in `core/src/env`
+  - [x] 1.4 Implement `parseEnv` in `core/src/env`
     - `parseEnv(schema, source)` and `EnvError`: empty strings count as missing, and every missing or invalid name is listed; values are never printed
     - Shared Zod fragments for the provider settings, so `OPENROUTER_API_KEY` and the model names are required only when `PROVIDERS` is `openrouter` or `record`
     - _Requirements: 8.3_
-  - [ ] 1.5 Write unit tests for `parseEnv`
+  - [x] 1.5 Write unit tests for `parseEnv`
     - Present value parses; one missing name is reported; an empty string counts as missing; several missing names are all listed; provider keys are conditional on `PROVIDERS`
     - _Requirements: 8.3_
 
-- [ ] 2. Supabase project and migrations
-  - [ ] 2.1 Initialize the local Supabase configuration
+- [x] 2. Supabase project and migrations
+  - [x] 2.1 Initialize the local Supabase configuration
     - Run `supabase init` and edit `supabase/config.toml`: `[auth.third_party.clerk] enabled = true`, `domain = "env(CLERK_DOMAIN)"`; Data API (PostgREST) disabled; Storage enabled
     - Add an empty `supabase/seed.sql` with a comment explaining what later specs seed
     - _Requirements: 3.4, 4.1_
-  - [ ] 2.2 Write the extensions and private-helpers migrations
+  - [x] 2.2 Write the extensions and private-helpers migrations
     - `create extension if not exists vector with schema extensions`, same for `pg_trgm`
     - `private` schema with `private.tenant_id()`, `private.user_id()`, `private.is_public_tenant(text)` (security definer, `search_path = ''`), and the `updated_at` trigger function
     - _Requirements: 3.2, 4.2_
-  - [ ] 2.3 Write the tables migration
+  - [x] 2.3 Write the tables migration
     - `goals`, `goal_versions`, `sources`, `jobs`, `items`, `drafts`, `pages`, `page_items`, `usage`, `api_keys`, and `public_tenants`, with the columns, check constraints and unique indexes in the design's Data Models section
     - `tenant_id`/`user_id` `not null` on every user-data table; the `kind = 'app'` ⇔ `tenant_id = 'system'` check on `goals`; composite `(tenant_id, …)` foreign keys between same-tenant rows
     - Indexes: `items_fts_gin` (GIN on `fts`), `items_embedding_hnsw` (HNSW `vector_cosine_ops` on `vector(1536)`), trigram index on goal name and description, the queue's partial indexes, and `usage (user_id, created_at)`
     - _Requirements: 3.1, 3.2, 3.3, 7.5_
-  - [ ] 2.4 Write the grants and RLS migration
+  - [x] 2.4 Write the grants and RLS migration
     - Revoke all from `anon` and `authenticated` (including default privileges), then grant per the design's grants table
     - Enable RLS on every user-data table, with the `_own` policy template using `(select private.tenant_id())`
     - Shared reads: `system` goals and goal versions for `anon` and `authenticated`; items, pages and page items of public tenants
     - _Requirements: 4.2_
-  - [ ] 2.5 Write the storage migration
+  - [x] 2.5 Write the storage migration
     - Private `sources` bucket (`public = false`, 20 MB object limit)
     - `storage.objects` policies for `authenticated`: `select`, `insert` and `delete` only where the first path segment equals the token's `sub`; no `update` policy; nothing for `anon`
     - _Requirements: 5.1, 5.2_
-  - [ ] 2.6 Write the production setup runbook
+  - [x] 2.6 Write the production setup runbook
     - `docs/production-setup.md`, the checklist an operator follows once per environment. Its first section registers Clerk as a Supabase third-party auth provider: activate the Supabase integration in the Clerk dashboard (adds `role: "authenticated"` to session tokens), add Clerk with the instance domain under Supabase → Authentication → Third-Party Auth, and disable the Data API on the hosted project
     - Later sections:
       - The GitHub `production` environment and its secrets (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, `SUPABASE_PROJECT_REF`)
@@ -75,29 +75,29 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
     - _Requirements: 4.1, 9.1, 9.2_
 
 - [ ] 3. Data access and storage in `core`
-  - [ ] 3.1 Implement the connection and `withActor` helper
+  - [x] 3.1 Implement the connection and `withActor` helper
     - `core/src/db`: `createDb(url)` (postgres.js, `prepare: false`, pool size parameter), `Actor`, `SYSTEM_OWNER = 'system'`, `Scoped`
     - `withActor(db, actor, fn)` sets `request.jwt.claims` and `set local role authenticated` / `anon` inside a transaction; `db.raw` is not exported from `./db`
     - `withSystem` exported only from `./db/system`
     - Map RLS violations to a typed `ForbiddenError`
     - _Requirements: 3.3, 4.3_
-  - [ ] 3.2 Implement embedding-model helpers
+  - [x] 3.2 Implement embedding-model helpers
     - `embeddingScope(embeddings)` returning the model filter that search queries must apply
     - `countItemsNeedingReembed(db, model)` and `selectStaleItems(db, model, limit)` (privileged, in `core/src/db`): items with non-null `search_text` whose `embedding_model` is null or differs
     - _Requirements: 7.6_
-  - [ ] 3.3 Implement `TenantStorage`
+  - [x] 3.3 Implement `TenantStorage`
     - Path builder `{tenantId}/{sourceId}/{index}-{safeFilename}` (allows `[A-Za-z0-9._-]`, max 100 characters)
     - `userStorage` (supabase-js with the publishable key plus the caller's Clerk token through `accessToken`) and `serviceStorage` (secret key, rejects paths outside its tenant before calling Storage)
     - `signedReadUrl` clamps the expiry to 1–600 s (default 300); there is no public-URL method
     - _Requirements: 5.2, 5.3_
-  - [ ] 3.4 Write unit tests for storage helpers
+  - [x] 3.4 Write unit tests for storage helpers
     - Path building and filename sanitizing; expiry clamping (0, 300, 601, 3600); `serviceStorage` throws on another tenant's path without making a network call
     - _Requirements: 5.2, 5.3_
-  - [ ] 3.5 Set up the database integration-test harness
+  - [x] 3.5 Set up the database integration-test harness
     - `vitest.db.config.ts` in `core` that includes `*.db.test.ts` and reads `TEST_DATABASE_URL` (the local stack's direct URL), failing with a clear message if it's unset
     - Helpers: `asUser(id)`, `asAnon()`, `asSystem()`, each wrapping a test in a transaction that is rolled back; and a fixture that adds a row to `public_tenants`
     - _Requirements: 4.4_
-  - [ ] 3.6 Write schema and cross-tenant isolation tests
+  - [x] 3.6 Write schema and cross-tenant isolation tests
     - Schema smoke: the ten tables, both extensions, `items_fts_gin` and `items_embedding_hnsw` exist; `tenant_id`/`user_id` are `not null` on every user-data table
     - For every user-data table: as user B, user A's rows can't be selected, updated or deleted, and are unchanged afterwards; inserting with `tenant_id = A` fails; a composite FK to A's row fails
     - Shared reads: `system` goals are readable but not writable by anon and by user B; public-tenant items and pages are readable; anon gets permission denied on `sources`, `drafts`, `jobs`, `usage` and `api_keys`
@@ -112,7 +112,7 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
   - Ensure `pnpm test`, `pnpm test:db`, `pnpm typecheck` and `pnpm lint` pass; ask the user if questions arise.
 
 - [ ] 5. LLM and embedding providers
-  - [ ] 5.1 Define provider interfaces
+  - [x] 5.1 Define provider interfaces
     - `core/src/providers/types.ts`: `ContentPart` (text, image), `Message`, `Usage`, `CompletionRequest`, `CompletionResult`, `LlmProvider`, `EmbeddingResult`, `EmbeddingProvider`, `Providers`, `ProviderError`
     - _Requirements: 7.1, 7.4_
   - [ ] 5.2 Implement the OpenRouter providers
@@ -120,13 +120,13 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
     - Cost from response usage, falling back to `/api/v1/models` pricing cached for an hour; 60 s and 15 s timeouts combined with the caller's signal; two jittered retries on 429/5xx; the API key is never included in errors
     - Throw when a returned vector's length differs from `dimensions`
     - _Requirements: 7.2, 7.4_
-  - [ ] 5.3 Implement the mock and recording providers and `createProviders`
+  - [x] 5.3 Implement the mock and recording providers and `createProviders`
     - `requestKey` (SHA-256 over canonical JSON; image bytes replaced by their hash; signal dropped)
     - File-backed and in-memory `RecordingStore`; `MissingRecordingError` naming the key, model and a prompt excerpt
     - `recordingProviders` that refuses `NODE_ENV=production`
     - `createProviders(env)` selecting `openrouter`, `mock` or `record`
     - _Requirements: 7.3, 7.4_
-  - [ ] 5.4 Write unit tests for the mock providers
+  - [x] 5.4 Write unit tests for the mock providers
     - Key is stable across object key order and changes when image bytes change; recorded result returned with its usage; a miss throws `MissingRecordingError`; `record` mode is refused in production; `createProviders` picks the implementation from `PROVIDERS`
     - _Requirements: 7.1, 7.3, 7.4_
   - [ ] 5.5 Write unit tests for the OpenRouter providers
@@ -134,27 +134,27 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
     - Wrong vector length errors; 429 retried then `ProviderError`; the key is absent from error text
     - _Requirements: 7.2, 7.4_
 
-- [ ] 6. Job queue
-  - [ ] 6.1 Implement `core/src/queue`
+- [x] 6. Job queue
+  - [x] 6.1 Implement `core/src/queue`
     - `Job` types and statuses
     - `enqueue` (scoped, `dedupeKey` with `on conflict do nothing`); `claim` using the design's `FOR UPDATE SKIP LOCKED` query with a 60 s lease, filtered to registered types
     - Fenced `heartbeat`, `setStage`, `complete`, `fail` (exponential backoff, `failure_reason` on final failure, `NonRetryableError` support) and `release` (restores the attempt); `reapExpired`
     - _Requirements: 6.1, 6.2_
-  - [ ] 6.2 Write queue integration tests
+  - [x] 6.2 Write queue integration tests
     - Two concurrent claimers never get the same job; types without a handler aren't claimed
     - An expired lease is reaped to `queued`, and to `failed` with "timed out" at max attempts; a fenced write after re-claim affects zero rows
     - `release` restores attempts; `dedupeKey` prevents a second queued job; `enqueue` as user A can't create a job for user B
     - _Requirements: 6.1, 6.2_
 
 - [ ] 7. Worker service
-  - [ ] 7.1 Scaffold `services/worker`
+  - [x] 7.1 Scaffold `services/worker`
     - `package.json` (name `worker`; `dev`: `tsx watch --env-file-if-exists=../../.env.local src/index.ts`; `build`: tsup; `typecheck`; `test`), `tsconfig.json` (`lib: ["ES2022"]`, `types: ["node"]`), `tsup.config.ts` (single bundled `dist/index.js`, `@cauldron/core` inlined), `vitest.config.ts`
     - `src/env.ts` using `parseEnv`: `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, provider settings, `EMBEDDING_*`, `WORKER_CONCURRENCY`, `POLL_INTERVAL_MS`, `SHUTDOWN_GRACE_MS`
     - _Requirements: 6.1, 8.3_
-  - [ ] 7.2 Implement the handler registry and the `ping` handler
+  - [x] 7.2 Implement the handler registry and the `ping` handler
     - `HandlerContext` (job, `scope` bound to the job's user, `TenantStorage` bound to the job's tenant, providers, `signal`, `setStage`, `log`), `JobHandler`, registry with `ping` (no-op)
     - _Requirements: 4.3, 6.3_
-  - [ ] 7.3 Implement the worker loop and shutdown
+  - [x] 7.3 Implement the worker loop and shutdown
     - Concurrency slots, polling every `POLL_INTERVAL_MS` when idle, a 20 s heartbeat per job (aborts on lost lease), the reaper every 15 s
     - On `SIGTERM`/`SIGINT`: stop claiming, wait up to `SHUTDOWN_GRACE_MS`, abort and `release` remaining jobs, close the pool
     - _Requirements: 6.1, 6.2, 6.4_
@@ -162,14 +162,14 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
     - Scheduler every 5 minutes: up to 1000 stale items, grouped by tenant into batches of 100, enqueued as `reembed` jobs with a `dedupeKey`
     - `reembed` handler: loads the batch through its scope, embeds `search_text`, updates rows whose model still differs (storing model and dimensions), and writes `usage` with `idempotency_key = reembed:<item id>:<model>`
     - _Requirements: 7.4, 7.5, 7.6_
-  - [ ] 7.5 Wire the worker entry point
+  - [x] 7.5 Wire the worker entry point
     - `src/index.ts`: validate env (exit 1 on `EnvError`), check that `EMBEDDING_DIMENSIONS` equals the column size, create the db pool (`WORKER_CONCURRENCY + 2`), providers and storage config, start the loop and the timers, install signal handlers; pino logging
     - Start the re-embed scheduler only once 7.4 exists; until then the entry point runs the loop and the reaper
     - _Requirements: 6.4, 8.3_
-  - [ ] 7.6 Write unit tests for the worker loop
+  - [x] 7.6 Write unit tests for the worker loop
     - Using an in-memory queue fake: never runs more than `WORKER_CONCURRENCY` jobs; a heartbeat returning `false` aborts the handler and discards its result; `NonRetryableError` → `fail` with `retryable: false`; shutdown stops claiming, waits for running handlers, then releases unfinished ones
     - _Requirements: 6.2, 6.4_
-  - [ ] 7.7 Write the `ping` integration test
+  - [x] 7.7 Write the `ping` integration test
     - `ping` job enqueued → worker run claims it → status `done`
     - _Requirements: 6.3_
   - [ ] 7.8 Write the re-embed integration test
@@ -180,40 +180,40 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
   - Ensure `pnpm test`, `pnpm test:db`, `pnpm typecheck` and `pnpm lint` pass; ask the user if questions arise.
 
 - [ ] 9. API service
-  - [ ] 9.1 Scaffold `services/api`
+  - [x] 9.1 Scaffold `services/api`
     - `package.json` (name `api`; same `dev`, `build`, `typecheck`, `test` scripts as the worker), `tsconfig.json`, `tsup.config.ts`, `vitest.config.ts`
     - Pinned dependencies: `hono`, `@hono/node-server`, `@hono/zod-openapi`, `zod`, `@clerk/backend`, `pino`
     - `src/env.ts`: `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, optional `CLERK_JWT_KEY`, `APP_ORIGINS` (parsed to a list of exact origins), optional `DEVELOPER_EMAILS`, provider and `EMBEDDING_*` settings, `PORT` (default 8787)
     - _Requirements: 1.1, 8.3_
-  - [ ] 9.2 Implement the error envelope
+  - [x] 9.2 Implement the error envelope
     - `ApiError`, `ErrorCode`; `onError` (unknown errors → 500 `internal`, stack logged with `requestId`); `notFound`; Zod `defaultHook` → 400 `validation_failed` with `details`; `ForbiddenError` → 403; `WWW-Authenticate: Bearer` on 401
     - Register the error schema as an OpenAPI component; add a request-ID middleware
     - _Requirements: 1.4_
-  - [ ] 9.3 Implement `defineRoute` and the OpenAPI document
+  - [x] 9.3 Implement `defineRoute` and the OpenAPI document
     - `defineRoute({ access })`, defaulting to `'user'`: sets `security` (`[{ bearerAuth: [] }]` or `[]`) and attaches `requireUser()`
     - Register the `bearerAuth` scheme; serve the document at `/v1/openapi.json` with `access: 'anonymous'`
     - _Requirements: 1.3, 2.4_
-  - [ ] 9.4 Implement CORS
+  - [x] 9.4 Implement CORS
     - `hono/cors` on `/v1/*` with an origin callback that allows only exact `APP_ORIGINS` matches; allowed headers `Authorization` and `Content-Type`; no credentials; `maxAge: 600`
     - _Requirements: 1.5_
-  - [ ] 9.5 Implement token verification and principals
+  - [x] 9.5 Implement token verification and principals
     - `verifySessionToken` wrapping `verifyToken` from `@clerk/backend` with `authorizedParties: APP_ORIGINS` and `jwtKey` (else `secretKey`)
     - `resolvePrincipal`: header only (cookies and query strings ignored); no header → anonymous; malformed or invalid → 401; valid → `{ kind: 'user', userId: sub, tenantId: sub, sessionId: sid }`
     - `requireUser()` → 401 before the handler runs; a helper mapping a principal to an `Actor`
     - _Requirements: 2.1, 2.2, 2.3, 2.4_
-  - [ ] 9.6 Implement the developer-role lookup and `GET /v1/me`
+  - [x] 9.6 Implement the developer-role lookup and `GET /v1/me`
     - `isDeveloper(userId)` using the Clerk Backend API (60 s per-user cache): `publicMetadata.role === 'developer'`, or a verified email in `DEVELOPER_EMAILS` (lower-cased); a Clerk failure throws so the route returns 503
     - `GET /v1/me` (`access: 'user'`) returning `{ userId, tenantId, isDeveloper }` with Zod response schemas, registered in `createApp`
     - _Requirements: 2.5_
-  - [ ] 9.7 Implement `/health`
+  - [x] 9.7 Implement `/health`
     - Outside `/v1`, with no CORS or auth: DB `select 1` with a 2 s timeout (200 or 503), `version` from `RAILWAY_GIT_COMMIT_SHA`, and the configured embedding model and dimensions
     - `embeddings.itemsNeedingReembed` (cached for 60 s) is added with 3.2; leave it out until then
     - _Requirements: 1.2, 7.6_
-  - [ ] 9.8 Wire `createApp` and the API entry point
+  - [x] 9.8 Wire `createApp` and the API entry point
     - `createApp(deps)` assembled as in the design (request ID → `/health` → `/v1` sub-app with CORS, `resolvePrincipal`, routes, OpenAPI document → `notFound`/`onError`)
     - `src/index.ts`: validate env, check embedding dimensions, create the db pool (10), providers and Clerk client, serve on `PORT`, close the server and pool on `SIGTERM`; pino with the `Authorization` header redacted
     - _Requirements: 1.1, 1.2, 8.3_
-  - [ ] 9.9 Write unit tests for the API
+  - [x] 9.9 Write unit tests for the API
     - With `app.request()` and injected fakes, plus a test-only route defined without `access` to exercise the closed default:
       - `/health` returns 200 without a token, and 503 when the DB probe fails
       - `/v1/openapi.json` is served anonymously; every operation has an explicit `security` field, and the test route has `bearerAuth`
@@ -221,7 +221,7 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
       - Unknown route → 404 envelope; thrown error → 500 with a generic message; invalid input → 400 `validation_failed`
       - CORS: allowed origin echoed, other origins get no header, preflight returns the allowed headers
     - _Requirements: 1.2, 1.3, 1.4, 1.5, 2.2, 2.3, 2.4_
-  - [ ] 9.10 Write unit tests for the token verifier wrapper
+  - [x] 9.10 Write unit tests for the token verifier wrapper
     - Mock `@clerk/backend` at the module boundary: `authorizedParties` and `jwtKey` (or `secretKey`) are passed through; a thrown verification error becomes 401; `Bearer` parsing rejects other schemes and empty tokens
     - _Requirements: 2.1, 2.3_
   - [ ] 9.11 Write unit tests for `/v1/me`
@@ -232,10 +232,10 @@ Testing follows the design: Vitest with `--run`, unit tests in `pnpm test` (no D
   - Ensure `pnpm test`, `pnpm test:db`, `pnpm typecheck` and `pnpm lint` pass, and that `pnpm dev:stack` starts the API, worker and Recipe Box against the local stack; ask the user if questions arise.
 
 - [ ] 11. Recipe Box end-to-end call
-  - [ ] 11.1 Give `useApiClient` a base URL
+  - [x] 11.1 Give `useApiClient` a base URL
     - `useApiClient(baseUrl)` joins the base URL and path with `new URL()` and is memoized with `useCallback`; update the existing API-client tests and add a base-URL test
     - _Requirements: 9.2_
-  - [ ] 11.2 Make `VITE_API_BASE_URL` required in Recipe Box
+  - [x] 11.2 Make `VITE_API_BASE_URL` required in Recipe Box
     - `validateEnv()` throws, naming `VITE_API_BASE_URL`, when it's missing or empty; update `env.test.ts`
     - _Requirements: 9.2_
   - [ ] 11.3 Show `/v1/me` on the Account page

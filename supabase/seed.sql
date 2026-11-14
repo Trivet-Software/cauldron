@@ -1,0 +1,9 @@
+-- Local-only seed data, applied by `pnpm db:reset` after the migrations. Never run in production.
+--
+-- Intentionally empty for now. Schema, grants, RLS policies and the `sources` bucket all live in
+-- supabase/migrations/ so they apply identically everywhere (Requirement 3.4).
+--
+-- Later specs add rows here:
+--   - goal-engine: nothing for app goals, which the API registers at startup under the `system`
+--     owner; possibly sample draft goals for a local developer account.
+--   - auth-abuse: the public demo tenant in `public_tenants` and its sample items and pages.

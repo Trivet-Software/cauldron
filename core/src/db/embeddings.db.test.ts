@@ -1,3 +1,5 @@
+// Items of one source need distinct ordinals (items_tenant_source_ordinal_key, 01.7 task 2.1);
+// seedChain's own item takes ordinal 0, so these start at 1.
 // Stale-embedding reads and the model filter against Postgres (01.5-backend-foundation task
 // 3.2, Requirement 7.6). The helpers take a Db and run on their own connection, so they can't
 // see a rolled-back transaction: this suite commits rows for two unique tenants and deletes
@@ -35,12 +37,14 @@ async function addItem(
   chain: Chain,
   searchText: string | null,
   model: string | null,
+  ordinal: number,
 ): Promise<string> {
   const [row] = await sql<{ id: string }[]>`
     insert into public.items
-      (tenant_id, user_id, goal_id, source_id, goal_version, data, title, search_text, embedding_model)
+      (tenant_id, user_id, goal_id, source_id, ordinal, goal_version, data, title, search_text,
+       embedding_model)
     values
-      (${chain.tenantId}, ${chain.tenantId}, ${chain.goalId}, ${chain.sourceId}, 1,
+      (${chain.tenantId}, ${chain.tenantId}, ${chain.goalId}, ${chain.sourceId}, ${ordinal}, 1,
        ${sql.json({})}, 'Item', ${searchText}, ${model})
     returning id`
   return row.id
@@ -51,11 +55,11 @@ beforeAll(async () => {
   await withSystem(testDb(), async ({ sql }) => {
     const chainA = await seedChain(sql, A)
     const chainB = await seedChain(sql, B)
-    ids.nullModel = await addItem(sql, chainA, 'soup', null)
-    ids.otherModel = await addItem(sql, chainA, 'stew', 'some-older-model')
-    ids.sameModel = await addItem(sql, chainA, 'salad', MODEL)
-    ids.noSearchText = await addItem(sql, chainA, null, null)
-    ids.otherTenant = await addItem(sql, chainB, 'bread', null)
+    ids.nullModel = await addItem(sql, chainA, 'soup', null, 1)
+    ids.otherModel = await addItem(sql, chainA, 'stew', 'some-older-model', 2)
+    ids.sameModel = await addItem(sql, chainA, 'salad', MODEL, 3)
+    ids.noSearchText = await addItem(sql, chainA, null, null, 4)
+    ids.otherTenant = await addItem(sql, chainB, 'bread', null, 1)
   })
 })
 

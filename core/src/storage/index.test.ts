@@ -31,6 +31,7 @@ function fakeBucket(overrides: Partial<SourcesBucket> = {}): SourcesBucket {
   return {
     upload: vi.fn(async () => ({ error: null })),
     download: vi.fn(async () => ({ data: new Blob([new Uint8Array([1, 2, 3])]), error: null })),
+    remove: vi.fn(async () => ({ error: null })),
     createSignedUrl: vi.fn(async (path: string) => ({
       data: { signedUrl: `${URL}/signed/${path}` },
       error: null,
@@ -156,6 +157,15 @@ describe('tenantStorage', () => {
       contentType: 'image/jpeg',
       upsert: false,
     })
+  })
+
+  it('remove deletes only a path inside the tenant prefix', async () => {
+    const bucket = fakeBucket()
+    const storage = tenantStorage(TENANT, () => bucket)
+    await storage.remove(VALID_PATH)
+    expect(bucket.remove).toHaveBeenCalledWith([VALID_PATH])
+    await expect(storage.remove(`user_tenantB/${SOURCE}/0-a.pdf`)).rejects.toThrow(StoragePathError)
+    expect(bucket.remove).toHaveBeenCalledTimes(1)
   })
 
   it('get returns the downloaded bytes', async () => {

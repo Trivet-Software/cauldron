@@ -40,7 +40,7 @@ export function registerOpenApi(v1: OpenAPIHono<AppBindings>, options: OpenApiOp
   })
 }
 
-type ErrorStatus = 400 | 401 | 403 | 404 | 409 | 429 | 500 | 503
+type ErrorStatus = 400 | 401 | 403 | 404 | 409 | 413 | 415 | 429 | 500 | 503
 
 const ERROR_DESCRIPTIONS: Record<ErrorStatus, string> = {
   400: 'The request is invalid.',
@@ -48,6 +48,8 @@ const ERROR_DESCRIPTIONS: Record<ErrorStatus, string> = {
   403: 'The caller may not perform this operation.',
   404: 'Not found.',
   409: 'Conflicts with existing data.',
+  413: 'The request body or a part of it is too large.',
+  415: 'The uploaded file type is not supported.',
   429: 'Too many requests.',
   500: 'Unexpected server error.',
   503: 'A dependency is unavailable.',

@@ -1,3 +1,4 @@
+export { DEV_SESSION_ID, withDevToken, type DevTokenOptions } from './dev-token'
 export {
   DEVELOPER_ROLE_MAX_ENTRIES,
   DEVELOPER_ROLE_TTL_MS,

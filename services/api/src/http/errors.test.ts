@@ -1,4 +1,5 @@
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
+import { HTTPException } from 'hono/http-exception'
 import { pino } from 'pino'
 import { describe, expect, it } from 'vitest'
 import { ForbiddenError } from '@cauldron/core/db'
@@ -23,6 +24,12 @@ function buildApp() {
   })
   app.get('/unauthorized', () => {
     throw new ApiError(401, 'unauthorized', 'A valid session token is required.')
+  })
+  app.get('/too-large', () => {
+    throw new HTTPException(413, { message: 'Payload Too Large' })
+  })
+  app.get('/wrong-type', () => {
+    throw new HTTPException(415, { message: 'Unsupported Media Type' })
   })
   app.get('/boom', () => {
     throw new Error('connection string postgres://secret@db leaked')
@@ -68,6 +75,16 @@ describe('error envelope', () => {
     expect(res.status).toBe(401)
     expect(res.headers.get('WWW-Authenticate')).toBe('Bearer')
     expect((await envelope(res)).code).toBe('unauthorized')
+  })
+
+  it('maps HTTP 413 and 415 exceptions to payload_too_large and unsupported_media_type', async () => {
+    const tooLarge = await app.request('/too-large')
+    expect(tooLarge.status).toBe(413)
+    expect(await envelope(tooLarge)).toMatchObject({ code: 'payload_too_large', status: 413 })
+
+    const wrongType = await app.request('/wrong-type')
+    expect(wrongType.status).toBe(415)
+    expect(await envelope(wrongType)).toMatchObject({ code: 'unsupported_media_type', status: 415 })
   })
 
   it('maps unknown errors to 500 internal without leaking the message', async () => {

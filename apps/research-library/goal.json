@@ -1,0 +1,16 @@
+{
+  "name": "Research Library",
+  "description": "Save papers and articles from text and find them later.",
+  "icon": "library",
+  "accentColor": "#1d4ed8",
+  "schema": {
+    "type": "object",
+    "titleField": "title",
+    "required": ["title"],
+    "properties": {
+      "title": { "type": "string", "title": "Title" },
+      "authors": { "type": "array", "items": { "type": "string" }, "title": "Authors" },
+      "summary": { "type": "string", "format": "long-text", "title": "Summary" }
+    }
+  }
+}

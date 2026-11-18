@@ -13,6 +13,7 @@ import { SessionTokenError, type VerifySessionToken } from './auth/verify-token'
 import { loadEnv } from './env'
 import { ErrorResponseSchema } from './http/errors'
 import { REQUEST_ID_HEADER } from './http/request-id'
+import { createInMemoryCollection, createInMemoryStorage } from './testing'
 
 const calls = vi.hoisted(() => ({ probe: 0 }))
 
@@ -103,6 +104,8 @@ function buildApp(databaseOk = true) {
     health: { checkDatabase: async () => databaseOk },
     logger: pino({ level: 'silent' }),
     developerRole: async () => false,
+    collection: createInMemoryCollection(),
+    storageFor: createInMemoryStorage().storageFor,
   })
 }
 

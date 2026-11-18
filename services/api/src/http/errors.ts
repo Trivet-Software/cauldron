@@ -17,6 +17,8 @@ export type ErrorCode =
   | 'forbidden'
   | 'not_found'
   | 'conflict'
+  | 'payload_too_large'
+  | 'unsupported_media_type'
   | 'rate_limited'
   | 'internal'
 
@@ -94,6 +96,10 @@ function codeForStatus(status: number): ErrorCode {
       return 'not_found'
     case 409:
       return 'conflict'
+    case 413:
+      return 'payload_too_large'
+    case 415:
+      return 'unsupported_media_type'
     case 422:
       return 'validation_failed'
     case 429:

@@ -8,6 +8,7 @@ import { SessionTokenError, type VerifySessionToken } from './auth/verify-token'
 import { loadEnv } from './env'
 import { ErrorResponseSchema } from './http/errors'
 import { REQUEST_ID_HEADER } from './http/request-id'
+import { createInMemoryCollection, createInMemoryStorage } from './testing'
 
 const ORIGIN = 'https://app.example.com'
 
@@ -35,6 +36,8 @@ function buildApp() {
     health: { checkDatabase: async () => true },
     logger: pino({ level: 'silent' }),
     developerRole: async () => false,
+    collection: createInMemoryCollection(),
+    storageFor: createInMemoryStorage().storageFor,
   })
 }
 

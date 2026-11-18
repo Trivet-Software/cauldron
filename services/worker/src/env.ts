@@ -9,6 +9,8 @@ import {
   providerRules,
 } from '@cauldron/core/env'
 
+import { COMPILE_MODES } from './handlers/compile'
+
 export const DEFAULT_WORKER_CONCURRENCY = 4
 export const DEFAULT_POLL_INTERVAL_MS = 1000
 // Below Railway's 30 s draining window (RAILWAY_DEPLOYMENT_DRAINING_SECONDS).
@@ -25,6 +27,8 @@ const workerEnvSchema = providerRules(
     SUPABASE_SECRET_KEY: z.string(),
     ...providerEnvShape,
     ...embeddingEnvShape,
+    // 01.7-walking-skeleton Requirement 5: unset means the deterministic mapper.
+    COMPILE_MODE: z.enum(COMPILE_MODES).default('mapper'),
     WORKER_CONCURRENCY: positiveInt(DEFAULT_WORKER_CONCURRENCY),
     POLL_INTERVAL_MS: positiveInt(DEFAULT_POLL_INTERVAL_MS),
     SHUTDOWN_GRACE_MS: positiveInt(DEFAULT_SHUTDOWN_GRACE_MS),

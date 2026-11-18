@@ -57,8 +57,9 @@ const maintenancePatterns = {
     'Import @cauldron/core through its exports map. core/src/db/maintenance is reserved for /health and the re-embed scheduler.',
 }
 
-// goal-engine's startup registration of apps/*/goal.json (goal-engine Requirement 8).
-// The module doesn't exist yet; keep this path in sync when it lands.
+// Startup registration of apps/*/goal.json (goal-engine Requirement 8, walking-skeleton
+// task 6.4). The one file allowed to import @cauldron/core/db/system; keep the path in sync
+// with systemActorImport's message if it moves.
 const registrationModule = 'services/api/src/goals/register-app-goals.ts'
 
 export default [
@@ -127,7 +128,10 @@ export default [
   {
     files: [registrationModule],
     rules: {
-      'no-restricted-imports': ['error', { paths: [postgresImport, maintenanceImport] }],
+      'no-restricted-imports': [
+        'error',
+        { paths: [postgresImport, maintenanceImport], patterns: [maintenancePatterns] },
+      ],
     },
   },
   // /health and the re-embed scheduler may read stale-embedding counts across tenants, but

@@ -13,7 +13,7 @@
   "dependencies": {
     "@cauldron/core": "workspace:*",
     "@clerk/backend": "^3.26.5",
-    "@hono/node-server": "^2.1.5",
+    "@hono/node-server": "^2.1.6",
     "@hono/zod-openapi": "^1.6.3",
     "hono": "^4.13.14",
     "pino": "^10.4.0",

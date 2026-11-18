@@ -45,6 +45,11 @@ export interface TenantStorage {
     contentType: string,
   ): Promise<string>
   get(path: string): Promise<Uint8Array>
+  /**
+   * Deletes one object. For the API's best-effort cleanup of an upload whose
+   * database insert failed; raw sources are otherwise immutable.
+   */
+  remove(path: string): Promise<void>
   /** Signed read URL; the lifetime is clamped to 1–600 s, default 300. */
   signedReadUrl(path: string, expiresInSeconds?: number): Promise<string>
 }
@@ -68,7 +73,7 @@ export interface ServiceStorageConfig extends StorageConfig {
 
 /** A Storage call failed. Carries Storage's message and HTTP status, never keys. */
 export class StorageOperationError extends Error {
-  readonly operation: 'put' | 'get' | 'signedReadUrl'
+  readonly operation: 'put' | 'get' | 'remove' | 'signedReadUrl'
   readonly status: number | undefined
   constructor(
     operation: StorageOperationError['operation'],
@@ -99,6 +104,7 @@ export interface SourcesBucket {
     options: { contentType: string; upsert: false },
   ): Promise<{ error: StorageErrorLike | null }>
   download(path: string): Promise<{ data: Blob | null; error: StorageErrorLike | null }>
+  remove(paths: string[]): Promise<{ error: StorageErrorLike | null }>
   createSignedUrl(
     path: string,
     expiresIn: number,
@@ -150,6 +156,11 @@ export function tenantStorage(
       return new Uint8Array(await data.arrayBuffer())
     },
 
+    async remove(path) {
+      assertTenantPath(path, tenantId)
+      const { error } = await resolve().remove([path])
+      if (error) fail('remove', error)
+    },
     async signedReadUrl(path, expiresInSeconds) {
       assertTenantPath(path, tenantId)
       const expiresIn = clampSignedUrlExpiry(expiresInSeconds)

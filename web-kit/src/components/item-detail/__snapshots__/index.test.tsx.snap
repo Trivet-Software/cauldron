@@ -1,0 +1,89 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ItemDetail (Requirements 7.4, 7.5) > renders one field of each kind by its kind 1`] = `
+<div>
+  <article
+    class="flex flex-col gap-4"
+  >
+    <h1
+      class="text-2xl font-semibold text-foreground"
+    >
+      Tomato soup
+    </h1>
+    <dl
+      class="flex flex-col gap-4"
+    >
+      <div
+        class="flex flex-col gap-1"
+      >
+        <dt
+          class="text-sm font-medium text-muted-foreground"
+        >
+          Summary
+        </dt>
+        <dd>
+          <p
+            class="text-sm text-foreground"
+          >
+            A quick weeknight soup
+          </p>
+        </dd>
+      </div>
+      <div
+        class="flex flex-col gap-1"
+      >
+        <dt
+          class="text-sm font-medium text-muted-foreground"
+        >
+          Notes
+        </dt>
+        <dd>
+          <p
+            class="whitespace-pre-wrap text-sm text-foreground"
+          >
+            Simmer 20 minutes.
+Season at the end.
+          </p>
+        </dd>
+      </div>
+      <div
+        class="flex flex-col gap-1"
+      >
+        <dt
+          class="text-sm font-medium text-muted-foreground"
+        >
+          Ingredients
+        </dt>
+        <dd>
+          <ul
+            class="list-disc pl-5 text-sm text-foreground"
+          >
+            <li>
+              2 tomatoes
+            </li>
+            <li>
+              1 onion
+            </li>
+          </ul>
+        </dd>
+      </div>
+      <div
+        class="flex flex-col gap-1"
+      >
+        <dt
+          class="text-sm font-medium text-muted-foreground"
+        >
+          Photo
+        </dt>
+        <dd>
+          <img
+            alt="Photo for Tomato soup"
+            class="max-h-96 rounded-md border object-contain"
+            src="https://storage.example/signed/soup.png?token=abc"
+          />
+        </dd>
+      </div>
+    </dl>
+  </article>
+</div>
+`;

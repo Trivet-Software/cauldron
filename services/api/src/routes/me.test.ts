@@ -9,6 +9,7 @@ import { type DeveloperRoleUser, createDeveloperRoleLookup } from '../auth/devel
 import { SessionTokenError, type VerifySessionToken } from '../auth/verify-token'
 import { loadEnv } from '../env'
 import { ErrorResponseSchema } from '../http/errors'
+import { createInMemoryCollection, createInMemoryStorage } from '../testing'
 
 const env = loadEnv({
   DATABASE_URL: 'postgresql://unused',
@@ -36,6 +37,8 @@ function buildApp(getUser: (id: string) => Promise<DeveloperRoleUser>) {
       getUser,
       developerEmails: ['dev@example.com'],
     }),
+    collection: createInMemoryCollection(),
+    storageFor: createInMemoryStorage().storageFor,
   })
 }
 

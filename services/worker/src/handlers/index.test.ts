@@ -5,7 +5,7 @@ import { type Db } from '@cauldron/core/db'
 import { type Providers } from '@cauldron/core/providers'
 import { type Job } from '@cauldron/core/queue'
 
-import { createHandlerContext, handlers, registeredTypes } from './index'
+import { createHandlerContext, createHandlers, handlers, registeredTypes } from './index'
 
 // withActor needs a real pool; replace it at the module boundary and record the actor.
 const withActor = vi.hoisted(() =>
@@ -64,6 +64,16 @@ describe('handler registry', () => {
 
   it('ping resolves without an outcome', async () => {
     await expect(handlers.ping(context().ctx)).resolves.toBeUndefined()
+  })
+
+  it('registers compile alongside ping and reembed', () => {
+    expect(registeredTypes(createHandlers()).sort()).toEqual(['compile', 'ping', 'reembed'])
+    expect(registeredTypes(createHandlers({ compileMode: 'llm' })).sort()).toEqual([
+      'compile',
+      'ping',
+      'reembed',
+    ])
+    expect(registeredTypes(handlers)).toContain('compile')
   })
 })
 

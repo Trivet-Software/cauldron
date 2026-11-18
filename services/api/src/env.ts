@@ -48,7 +48,43 @@ const developerEmails = z
   .transform((value) => splitList(value).map((email) => email.toLowerCase()))
   .default([])
 
-const apiEnvSchema = providerRules(
+export const AUTH_MODES = ['clerk', 'dev'] as const
+export type AuthMode = (typeof AUTH_MODES)[number]
+
+/** Shorter static tokens are too easy to guess (01.7-walking-skeleton Requirement 8.4). */
+export const MIN_DEV_TOKEN_LENGTH = 32
+
+const DEV_AUTH_REQUIRED = ['DEV_API_TOKEN', 'DEV_USER_ID', 'SUPABASE_SECRET_KEY'] as const
+
+/**
+ * Adds the AUTH_MODE=dev requirements (01.7-walking-skeleton Requirement 8.4).
+ * Like providerRules, it reads the raw input so one error lists every problem,
+ * and it reports names only, never the token.
+ */
+export function devAuthRules<S extends z.ZodObject>(schema: S): S {
+  return schema.superRefine(
+    (_value, ctx) => {
+      const input = ctx.value as Record<string, unknown>
+      if (input.AUTH_MODE !== 'dev') return
+      for (const name of DEV_AUTH_REQUIRED) {
+        if (input[name] === undefined) {
+          ctx.addIssue({ code: 'custom', path: [name], message: 'Required when AUTH_MODE=dev' })
+        }
+      }
+      const token = input.DEV_API_TOKEN
+      if (typeof token === 'string' && token.length < MIN_DEV_TOKEN_LENGTH) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['DEV_API_TOKEN'],
+          message: `Must be at least ${MIN_DEV_TOKEN_LENGTH} characters`,
+        })
+      }
+    },
+    { when: () => true },
+  )
+}
+
+const apiEnvSchema = devAuthRules(providerRules(
   z.object({
     DATABASE_URL: z.string(),
     SUPABASE_URL: z.url(),
@@ -62,8 +98,19 @@ const apiEnvSchema = providerRules(
     PORT: z.coerce.number().int().min(1).max(65535).default(DEFAULT_PORT),
     // Railway injects the deployed commit; `/health` reports it as `version`.
     RAILWAY_GIT_COMMIT_SHA: z.string().default('dev'),
+    // Dev auth mode: a static token stands in for a Clerk session, locally only.
+    // checkAuthMode() in main.ts refuses it next to NODE_ENV=production or
+    // RAILWAY_ENVIRONMENT. SUPABASE_SECRET_KEY serves only the dev principal's storage.
+    AUTH_MODE: z.enum(AUTH_MODES).optional(),
+    DEV_API_TOKEN: z.string().optional(),
+    DEV_USER_ID: z.string().optional(),
+    SUPABASE_SECRET_KEY: z.string().optional(),
+    NODE_ENV: z.string().optional(),
+    RAILWAY_ENVIRONMENT: z.string().optional(),
+    // Directory holding `<app>/goal.json`; startApi applies the default (DEFAULT_APPS_DIR in main.ts).
+    APPS_DIR: z.string().optional(),
   }),
-)
+))
 
 export type ApiEnv = z.output<typeof apiEnvSchema>
 

@@ -12,7 +12,10 @@
     "./db/system": "./src/db/system.ts",
     "./db/maintenance": "./src/db/maintenance.ts",
     "./queue": "./src/queue/index.ts",
-    "./storage": "./src/storage/index.ts"
+    "./storage": "./src/storage/index.ts",
+    "./goals": "./src/goals/index.ts",
+    "./compile": "./src/compile/index.ts",
+    "./collection": "./src/collection/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -26,6 +29,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.19.2",
+    "fast-check": "^4.10.2",
     "vitest": "^5.0.5"
   }
 }

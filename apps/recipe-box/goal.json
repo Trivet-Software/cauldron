@@ -1,0 +1,17 @@
+{
+  "name": "Recipe Box",
+  "description": "Save recipes from text or a photo and find them later.",
+  "icon": "chef-hat",
+  "accentColor": "#c2410c",
+  "schema": {
+    "type": "object",
+    "titleField": "title",
+    "required": ["title"],
+    "properties": {
+      "title": { "type": "string", "title": "Title" },
+      "ingredients": { "type": "array", "items": { "type": "string" }, "title": "Ingredients" },
+      "notes": { "type": "string", "format": "long-text", "title": "Notes" },
+      "image": { "type": "string", "format": "image", "title": "Photo" }
+    }
+  }
+}

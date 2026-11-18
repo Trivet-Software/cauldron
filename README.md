@@ -118,6 +118,54 @@ Cauldron is being built with Kiro, mainly Kiro Crew. The work follows Kiro's spe
 
 `pnpm dev` starts only the Recipe Box web app.
 
+`CLERK_DOMAIN` is needed by every Supabase CLI command that reads `supabase/config.toml`, including `pnpm db:reset`: `CLERK_DOMAIN=<your-clerk-domain> pnpm db:reset`. The services don't read it.
+
+### Walking skeleton (in progress)
+
+The walking skeleton (`.kiro/specs/01.7-walking-skeleton/`) is one thin path through every layer: a goal file defines an app, a user captures text or a photo, the worker compiles it into an item without an LLM, and the user finds it again by title, in Recipe Box or from Kiro over MCP. The capture and item API routes, the Recipe Box screens and parts of the MCP server are still being built, so the steps below describe the intended path. Check the task list in that spec for what exists.
+
+Each app's goal file is `apps/<name>/goal.json`. The API registers every one at startup. `APPS_DIR` overrides where it looks.
+
+**Run it**
+
+1. Do steps 1 to 3 of "Run the local stack" above. Use `PROVIDERS=mock` if you have no OpenRouter key. `COMPILE_MODE` defaults to `mapper`, which compiles deterministically and makes no LLM call. `COMPILE_MODE=llm` makes one LLM call per capture instead.
+2. Turn on dev auth mode in `.env.local`. It lets the local MCP server act as you with a static token, in place of a Clerk session:
+   ```
+   AUTH_MODE=dev
+   DEV_API_TOKEN=<output of: openssl rand -hex 32>
+   DEV_USER_ID=<your Clerk user ID, user_...>
+   SUPABASE_SECRET_KEY=<from supabase status -o env>
+   API_BASE_URL=http://localhost:8787
+   ```
+   `DEV_API_TOKEN` is a local-only secret. Keep it in the gitignored `.env.local`, and never set `AUTH_MODE=dev` in Railway: the API refuses to start in dev mode when `NODE_ENV=production` or `RAILWAY_ENVIRONMENT` is set. With `DEV_USER_ID` set to your own Clerk user ID, items captured over MCP show up in Recipe Box when you sign in, because both use the same tenant.
+3. Start the stack with `pnpm dev:stack`. It starts the API, the worker and Recipe Box. It doesn't start the MCP server; Kiro does.
+
+**Register the MCP server in Kiro (manual setup)**
+
+The repo doesn't ship a Kiro MCP config. Add a `cauldron` server in Kiro (workspace config `.kiro/settings/mcp.json`, or your user config) that runs this command from the repo root:
+
+```
+pnpm --silent --filter mcp start
+```
+
+Set `API_BASE_URL` (for example `http://localhost:8787`) and `DEV_API_TOKEN` in the server's `env`, or leave them out: the `start` script also loads them from the repo-root `.env.local`. Use your real token only in your local config, and don't commit it. `--silent` keeps pnpm's output off stdout, which carries the MCP protocol. If Kiro doesn't start the server from the repo root, add `--dir <path to this repo>` to the pnpm arguments.
+
+The server exposes the tools `list_goals`, `capture`, `search` and `get_item`, and the resource `examples://goals/recipe-box`. To try it without Kiro, run the MCP Inspector and point it at the same command and environment:
+
+```
+npx @modelcontextprotocol/inspector
+```
+
+**Manual check**
+
+With local Supabase running, `.env.local` set as above (`PROVIDERS=mock` is fine) and `pnpm dev:stack` up:
+
+1. Sign in to Recipe Box, open `/items`, paste a recipe with a title line and `-` bullets, and see the row go from `queued` to `ready` within 5 seconds.
+2. Upload a JPEG. See it reach `ready`, open it, and see the photo on the detail page.
+3. Type part of a title in the search box and see only the matching items.
+4. In Kiro, call the `cauldron` `capture` tool with some text, and see the item appear in Recipe Box.
+5. Call the `search` tool with part of that title and see the item returned.
+
 ### Tests
 
 - `pnpm test` runs the unit tests. They don't need a database.

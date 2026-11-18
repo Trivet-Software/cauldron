@@ -7,6 +7,13 @@ import { type Db, rawSql } from './internal'
 import { type Scoped } from './scoped'
 
 export { SYSTEM_OWNER }
+export {
+  goalContentHash,
+  registerGoal,
+  type RegisterGoalInput,
+  type RegisterResult,
+  type RegisterStatus,
+} from './register-goal'
 
 const SYSTEM: SystemActor = { kind: 'system' }
 

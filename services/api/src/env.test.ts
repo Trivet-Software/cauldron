@@ -85,3 +85,74 @@ describe('loadEnv', () => {
     ])
   })
 })
+
+// 01.7-walking-skeleton Requirements 8.4 and 8.5.
+describe('loadEnv, dev auth mode', () => {
+  const token32 = 'x'.repeat(32)
+  const dev = {
+    ...base,
+    AUTH_MODE: 'dev',
+    DEV_API_TOKEN: token32,
+    DEV_USER_ID: 'user_dev',
+    SUPABASE_SECRET_KEY: 'sb_secret_test',
+  }
+
+  it('leaves every dev variable optional when AUTH_MODE is unset or clerk', () => {
+    expect(loadEnv(base).AUTH_MODE).toBeUndefined()
+    expect(loadEnv({ ...base, AUTH_MODE: 'clerk' }).AUTH_MODE).toBe('clerk')
+  })
+
+  it('accepts a complete dev configuration', () => {
+    const env = loadEnv(dev)
+    expect(env.AUTH_MODE).toBe('dev')
+    expect(env.DEV_API_TOKEN).toBe(token32)
+    expect(env.DEV_USER_ID).toBe('user_dev')
+    expect(env.SUPABASE_SECRET_KEY).toBe('sb_secret_test')
+  })
+
+  it('rejects an AUTH_MODE other than clerk or dev', () => {
+    expect(errorOf(() => loadEnv({ ...base, AUTH_MODE: 'none' })).names).toEqual(['AUTH_MODE'])
+  })
+
+  it.each(['DEV_API_TOKEN', 'DEV_USER_ID', 'SUPABASE_SECRET_KEY'])(
+    'names %s when AUTH_MODE=dev and it is missing',
+    (name) => {
+      const source: Record<string, string> = { ...dev }
+      delete source[name]
+      expect(errorOf(() => loadEnv(source)).names).toEqual([name])
+    },
+  )
+
+  it('counts an empty string as missing', () => {
+    expect(errorOf(() => loadEnv({ ...dev, DEV_USER_ID: '' })).names).toEqual(['DEV_USER_ID'])
+  })
+
+  it('names every missing dev variable at once', () => {
+    const error = errorOf(() => loadEnv({ ...base, AUTH_MODE: 'dev' }))
+    expect(error.names).toEqual(['DEV_API_TOKEN', 'DEV_USER_ID', 'SUPABASE_SECRET_KEY'])
+  })
+
+  it('rejects a 31-character DEV_API_TOKEN and accepts 32', () => {
+    expect(loadEnv({ ...dev, DEV_API_TOKEN: 'x'.repeat(32) }).DEV_API_TOKEN).toHaveLength(32)
+    const error = errorOf(() => loadEnv({ ...dev, DEV_API_TOKEN: 'x'.repeat(31) }))
+    expect(error.names).toEqual(['DEV_API_TOKEN'])
+  })
+
+  it('never echoes the token in the error', () => {
+    const short = 'short-secret-token'
+    const error = errorOf(() => loadEnv({ ...dev, DEV_API_TOKEN: short }))
+    expect(error.message).not.toContain(short)
+  })
+
+  it('does not require the dev variables, or a minimum length, outside dev mode', () => {
+    expect(loadEnv({ ...base, DEV_API_TOKEN: 'short' }).DEV_API_TOKEN).toBe('short')
+  })
+
+  it('passes NODE_ENV and RAILWAY_ENVIRONMENT through, absent by default', () => {
+    expect(loadEnv(base).NODE_ENV).toBeUndefined()
+    expect(loadEnv(base).RAILWAY_ENVIRONMENT).toBeUndefined()
+    const env = loadEnv({ ...base, NODE_ENV: 'production', RAILWAY_ENVIRONMENT: 'production' })
+    expect(env.NODE_ENV).toBe('production')
+    expect(env.RAILWAY_ENVIRONMENT).toBe('production')
+  })
+})

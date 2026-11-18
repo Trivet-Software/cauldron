@@ -14,7 +14,7 @@ import { type Providers } from '@cauldron/core/providers'
 import { createProviders } from '@cauldron/core/providers/mock'
 
 import { type WorkerEnv, loadEnv } from './env'
-import { type HandlerRegistry, handlers as defaultHandlers } from './handlers'
+import { type HandlerRegistry, createHandlers } from './handlers'
 import { createMaintenance } from './maintenance'
 import { contextFactory, createWorker, queueOps } from './worker'
 
@@ -92,7 +92,7 @@ export function startWorker(env: WorkerEnv, options: StartWorkerOptions = {}): R
   const queue = queueOps(db)
   const worker = createWorker({
     queue,
-    handlers: options.handlers ?? defaultHandlers,
+    handlers: options.handlers ?? createHandlers({ compileMode: env.COMPILE_MODE }),
     createContext: contextFactory({
       db,
       storageConfig: { url: env.SUPABASE_URL, secretKey: env.SUPABASE_SECRET_KEY },

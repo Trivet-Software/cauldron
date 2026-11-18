@@ -47,6 +47,28 @@ describe('loadEnv', () => {
     expect(error.names).toEqual(['WORKER_CONCURRENCY'])
   })
 
+  describe('COMPILE_MODE', () => {
+    it('defaults to mapper when unset', () => {
+      expect(loadEnv(base).COMPILE_MODE).toBe('mapper')
+    })
+
+    it('counts an empty string as unset', () => {
+      expect(loadEnv({ ...base, COMPILE_MODE: '' }).COMPILE_MODE).toBe('mapper')
+    })
+
+    it.each(['mapper', 'llm'] as const)('accepts %s', (mode) => {
+      expect(loadEnv({ ...base, COMPILE_MODE: mode }).COMPILE_MODE).toBe(mode)
+    })
+
+    it('rejects another value, naming the variable and no secrets', () => {
+      const error = errorOf(() => loadEnv({ ...base, COMPILE_MODE: 'LLM' }))
+      expect(error.names).toEqual(['COMPILE_MODE'])
+      expect(error.message).toContain('COMPILE_MODE')
+      expect(error.message).not.toContain('sb_secret_test')
+      expect(error.message).not.toContain('postgres://')
+    })
+  })
+
   it('requires OpenRouter settings when PROVIDERS=openrouter', () => {
     const error = errorOf(() => loadEnv({ ...base, PROVIDERS: 'openrouter' }))
     expect(error.names).toEqual([

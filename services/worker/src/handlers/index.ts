@@ -16,6 +16,7 @@ import {
   serviceStorage,
 } from '@cauldron/core/storage'
 
+import { type CompileMode, createCompileHandler } from './compile'
 import { pingHandler } from './ping'
 import { reembedHandler } from './reembed'
 
@@ -40,10 +41,21 @@ export type JobHandler<P = unknown> = (
 
 export type HandlerRegistry = Readonly<Record<string, JobHandler>>
 
-export const handlers: HandlerRegistry = {
-  ping: pingHandler, // Requirement 6.3
-  reembed: reembedHandler, // Requirements 7.5 and 7.6
+export interface HandlerRegistryOptions {
+  /** COMPILE_MODE: the deterministic mapper (default) or one LLM call per capture. */
+  compileMode?: CompileMode
 }
+
+/** Builds the registry; `startWorker` passes `env.COMPILE_MODE` (01.7 Requirement 5). */
+export function createHandlers(options: HandlerRegistryOptions = {}): HandlerRegistry {
+  return {
+    ping: pingHandler, // Requirement 6.3
+    reembed: reembedHandler, // Requirements 7.5 and 7.6
+    compile: createCompileHandler({ mode: options.compileMode ?? 'mapper' }), // 01.7 Requirement 3
+  }
+}
+
+export const handlers: HandlerRegistry = createHandlers()
 
 /**
  * The job types the worker may claim. claim() filters on these, so a job whose type has

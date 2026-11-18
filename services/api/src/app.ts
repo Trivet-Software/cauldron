@@ -3,6 +3,7 @@
 // Requirements 1.1 and 1.2; design "API Service").
 import { OpenAPIHono } from '@hono/zod-openapi'
 import { type Logger } from 'pino'
+import { type CollectionStore } from '@cauldron/core/collection'
 import { type Db } from '@cauldron/core/db'
 import { type DeveloperRoleLookup } from './auth/developer'
 import { resolvePrincipal } from './auth/principal'
@@ -16,6 +17,7 @@ import { requestId } from './http/request-id'
 import { requestLog } from './http/request-log'
 import { type HealthProbe, healthRoutes } from './routes/health'
 import { registerRoutes } from './routes'
+import { type StorageFor } from './storage'
 
 export interface ApiDeps {
   env: ApiEnv
@@ -25,6 +27,10 @@ export interface ApiDeps {
   logger: Logger
   /** `GET /v1/me`'s role check: Clerk Backend API in production, a fake in tests. */
   developerRole: DeveloperRoleLookup
+  /** Goals, sources and items (01.7 design, "Collection repository"): the real store, or an in-memory fake in tests. */
+  collection: CollectionStore
+  /** The caller's raw-source storage: `userStorage` for Clerk sessions, `serviceStorage` for the dev token. */
+  storageFor: StorageFor
 }
 
 export function createApp(deps: ApiDeps): OpenAPIHono<AppBindings> {

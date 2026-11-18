@@ -8,9 +8,11 @@
     "./components/*": "./src/components/*/index.ts",
     "./lib/utils": "./src/lib/utils.ts",
     "./theme.css": "./src/theme.css",
-    "./auth": "./src/auth/index.ts"
+    "./auth": "./src/auth/index.ts",
+    "./collection": "./src/collection/index.ts"
   },
   "dependencies": {
+    "@cauldron/core": "workspace:*",
     "clsx": "^2.1.0",
     "tailwind-merge": "^2.0.0"
   },

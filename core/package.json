@@ -23,13 +23,13 @@
     "test:db": "vitest --run --config vitest.db.config.ts"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.118.0",
-    "postgres": "^4.0.0",
+    "@supabase/supabase-js": "^2.119.2",
+    "postgres": "^4.1.1",
     "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",
-    "fast-check": "^4.10.2",
-    "vitest": "^5.0.5"
+    "fast-check": "^4.10.3",
+    "vitest": "^5.1.1"
   }
 }
